@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Machine Learning Algorithms Visualization & Hyperparameter Tuning</title>
+    <title>Machine Learning Algorithms & Dynamic Hyperparameter Tuning</title>
     <style>
         :root {
             --primary: #2563eb;
+            --primary-hover: #1d4ed8;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text: #1e293b;
@@ -35,7 +36,7 @@
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
             gap: 20px;
         }
         .card {
@@ -44,11 +45,9 @@
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s;
             display: flex;
             flex-direction: column;
         }
-        .card:hover { transform: translateY(-4px); }
         .card h3 {
             margin-top: 0;
             color: var(--primary);
@@ -63,11 +62,10 @@
             color: #3730a3;
             padding: 2px 8px;
             border-radius: 12px;
-            white-space: nowrap;
         }
         .viz-container {
             width: 100%;
-            height: 140px;
+            height: 120px;
             background: #f8fafc;
             border: 1px dashed #cbd5e1;
             border-radius: 8px;
@@ -77,41 +75,83 @@
             margin: 10px 0;
         }
         svg { width: 100%; height: 100%; }
-        p.desc { font-size: 0.85rem; color: #334155; margin-bottom: 12px; flex-grow: 1; }
+        p.desc { font-size: 0.85rem; color: #334155; margin-bottom: 12px; }
         
+        /* Tuning Box & Dynamic Controls */
         .tuning-box {
             background: var(--tuning-bg);
-            border-left: 3px solid var(--primary);
-            padding: 10px;
-            border-radius: 0 6px 6px 0;
-            font-size: 0.8rem;
+            border-left: 4px solid var(--primary);
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
             margin-top: auto;
         }
         .tuning-title {
             font-weight: bold;
             color: #0f172a;
-            margin-bottom: 4px;
-            display: block;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .tuning-box ul {
+        .param-list {
             margin: 0;
-            padding-left: 16px;
+            padding-left: 18px;
             color: #475569;
         }
-        .tuning-box li {
-            margin-bottom: 2px;
+        .param-list li {
+            margin-bottom: 4px;
+        }
+        .add-form {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #cbd5e1;
+        }
+        .input-group {
+            display: flex;
+            gap: 6px;
+        }
+        .input-group input {
+            padding: 6px 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            outline: none;
+        }
+        .input-group input:focus { border-color: var(--primary); }
+        .input-name { width: 40%; }
+        .input-desc { width: 60%; }
+        .btn-add {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn-add:hover { background: var(--primary-hover); }
+        .btn-delete {
+            color: #ef4444;
+            cursor: pointer;
+            margin-left: 6px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Machine Learning Visualizer & Parameter Guide</h1>
-        <p>คู่มือเจาะลึกอัลกอริทึมทั้ง 14 โมเดล พร้อมเทคนิคการปรับ Hyperparameter Tuning</p>
+        <h1>ML Visualizer & Dynamic Parameter Tuning</h1>
+        <p>สามารถเพิ่ม/ลบ Hyperparameter ได้เองแบบ Real-time ในการ์ดแต่ละใบ</p>
     </header>
 
-    <!-- Supervised Learning -->
-    <h2 class="section-title">1. Supervised Learning (การเรียนรู้แบบมีผู้สอน)</h2>
+    <h2 class="section-title">1. Supervised Learning</h2>
     <div class="grid">
         
         <!-- 1. Linear Regression -->
@@ -121,17 +161,23 @@
                 <svg viewBox="0 0 200 150">
                     <circle cx="30" cy="120" r="4" fill="#ef4444"/><circle cx="60" cy="90" r="4" fill="#ef4444"/>
                     <circle cx="100" cy="80" r="4" fill="#ef4444"/><circle cx="140" cy="40" r="4" fill="#ef4444"/>
-                    <circle cx="170" cy="30" r="4" fill="#ef4444"/>
                     <line x1="20" y1="130" x2="180" y2="20" stroke="#2563eb" stroke-width="3"/>
                 </svg>
             </div>
-            <p class="desc"><b>หลักการ:</b> ค้นหาเส้นตรง (Best-Fit Line) ที่มีค่าความคลาดเคลื่อน (MSE) จากจุดข้อมูลจริงน้อยที่สุด เพื่อทำนายค่าตัวเลขต่อเนื่อง</p>
+            <p class="desc"><b>หลักการ:</b> ค้นหาเส้นตรง (Best-Fit Line) ที่มีค่าความคลาดเคลื่อนน้อยที่สุด</p>
             <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>fit_intercept:</b> คำนวณจุดตัดแกน Y ($b$) หรือไม่</li>
-                    <li><b>alpha ($\alpha$):</b> (Lasso/Ridge) ควบคุมน้ำหนักบทลงโทษป้องกัน Overfitting</li>
+                <div class="tuning-title">⚙️ Hyperparameter Tuning</div>
+                <ul class="param-list">
+                    <li><b>fit_intercept:</b> คำนวณจุดตัดแกน Y (b) หรือไม่ <span class="btn-delete" onclick="removeParam(this)">×</span></li>
+                    <li><b>alpha (&alpha;):</b> ค่าน้ำหนักปรับลงโทษ L1/L2 <span class="btn-delete" onclick="removeParam(this)">×</span></li>
                 </ul>
+                <div class="add-form">
+                    <div class="input-group">
+                        <input type="text" class="input-name" placeholder="ชื่อ Parameter">
+                        <input type="text" class="input-desc" placeholder="คำอธิบาย...">
+                    </div>
+                    <button class="btn-add" onclick="addParam(this)">➕ เพิ่ม Parameter</button>
+                </div>
             </div>
         </div>
 
@@ -144,42 +190,26 @@
                     <line x1="20" y1="75" x2="180" y2="75" stroke="#94a3b8" stroke-dasharray="4"/>
                 </svg>
             </div>
-            <p class="desc"><b>หลักการ:</b> ใช้ Sigmoid Function แปลงค่าสมการเส้นตรงให้อยู่ในช่วงความน่าจะเป็น 0 ถึง 1 เพื่อตัดแบ่งประเภทข้อมูลแบบ Binary</p>
+            <p class="desc"><b>หลักการ:</b> ใช้ Sigmoid Function คำนวณความน่าจะเป็นช่วง 0 ถึง 1</p>
             <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>C:</b> ค่าตรงข้าม Regularization (C ต่ำ = ป้องกัน Overfit สูง)</li>
-                    <li><b>penalty:</b> เลือกประเภทลงโทษ ('l1', 'l2', 'elasticnet')</li>
-                    <li><b>solver:</b> อัลกอริทึมคำนวณ เช่น 'lbfgs', 'liblinear'</li>
+                <div class="tuning-title">⚙️ Hyperparameter Tuning</div>
+                <ul class="param-list">
+                    <li><b>C:</b> ค่าตรงข้าม Regularization (C ต่ำ = กัน Overfit) <span class="btn-delete" onclick="removeParam(this)">×</span></li>
+                    <li><b>penalty:</b> ประเภทการลงโทษ ('l1', 'l2', 'elasticnet') <span class="btn-delete" onclick="removeParam(this)">×</span></li>
                 </ul>
+                <div class="add-form">
+                    <div class="input-group">
+                        <input type="text" class="input-name" placeholder="ชื่อ Parameter">
+                        <input type="text" class="input-desc" placeholder="คำอธิบาย...">
+                    </div>
+                    <button class="btn-add" onclick="addParam(this)">➕ เพิ่ม Parameter</button>
+                </div>
             </div>
         </div>
 
-        <!-- 3. kNN -->
+        <!-- 3. Decision Tree -->
         <div class="card">
-            <h3>3. kNN <span class="badge">Instance-based</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <circle cx="60" cy="60" r="5" fill="#ef4444"/><circle cx="80" cy="40" r="5" fill="#ef4444"/>
-                    <circle cx="140" cy="110" r="5" fill="#10b981"/><circle cx="120" cy="120" r="5" fill="#10b981"/>
-                    <circle cx="100" cy="80" r="6" fill="#f59e0b"/>
-                    <circle cx="100" cy="80" r="45" fill="none" stroke="#64748b" stroke-dasharray="4"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> ทำนายกลุ่มข้อมูลใหม่จากการโหวตเสียงข้างมากของเพื่อนบ้านที่อยู่ใกล้ที่สุดจำนวน k จุด</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>n_neighbors (k):</b> จำนวนเพื่อนบ้าน (k น้อยเสี่ยง Overfit / k มากเสี่ยง Underfit)</li>
-                    <li><b>weights:</b> การถ่วงน้ำหนัก 'uniform' หรือ 'distance'</li>
-                    <li><b>metric:</b> วัดระยะทาง เช่น 'euclidean', 'manhattan'</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 4. Decision Tree -->
-        <div class="card">
-            <h3>4. Decision Tree <span class="badge">Tree-based</span></h3>
+            <h3>3. Decision Tree <span class="badge">Tree-based</span></h3>
             <div class="viz-container">
                 <svg viewBox="0 0 200 150">
                     <circle cx="100" cy="30" r="12" fill="#2563eb"/>
@@ -188,255 +218,55 @@
                     <circle cx="60" cy="80" r="10" fill="#10b981"/><circle cx="140" cy="80" r="10" fill="#ef4444"/>
                 </svg>
             </div>
-            <p class="desc"><b>หลักการ:</b> สร้างแตกกิ่งก้านสาขาตามคำถามเงื่อนไข โดยคัดเลือกฟีเจอร์ที่ให้ค่า Information Gain สูงที่สุดในแต่ละ Node</p>
+            <p class="desc"><b>หลักการ:</b> แตกกิ่งเงื่อนไขตามค่า Information Gain</p>
             <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>max_depth:</b> ความลึกสูงสุดของต้นไม้ (คุม Overfitting)</li>
-                    <li><b>min_samples_split:</b> จำนวนข้อมูลขั้นต่ำที่ยอมให้แตกกิ่ง</li>
-                    <li><b>criterion:</b> เกณฑ์ความสะอาดข้อมูล ('gini', 'entropy')</li>
+                <div class="tuning-title">⚙️ Hyperparameter Tuning</div>
+                <ul class="param-list">
+                    <li><b>max_depth:</b> ความลึกสูงสุดของต้นไม้ <span class="btn-delete" onclick="removeParam(this)">×</span></li>
+                    <li><b>min_samples_split:</b> จำนวนข้อมูลขั้นต่ำในการแตกกิ่ง <span class="btn-delete" onclick="removeParam(this)">×</span></li>
                 </ul>
+                <div class="add-form">
+                    <div class="input-group">
+                        <input type="text" class="input-name" placeholder="ชื่อ Parameter">
+                        <input type="text" class="input-desc" placeholder="คำอธิบาย...">
+                    </div>
+                    <button class="btn-add" onclick="addParam(this)">➕ เพิ่ม Parameter</button>
+                </div>
             </div>
         </div>
 
-        <!-- 5. Random Forest -->
-        <div class="card">
-            <h3>5. Random Forest <span class="badge">Ensemble (Bagging)</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <g transform="translate(-30, 10) scale(0.7)">
-                        <circle cx="100" cy="30" r="10" fill="#2563eb"/>
-                        <line x1="100" y1="40" x2="70" y2="70" stroke="#64748b"/><line x1="100" y1="40" x2="130" y2="70" stroke="#64748b"/>
-                        <circle cx="70" cy="70" r="8" fill="#10b981"/><circle cx="130" cy="70" r="8" fill="#ef4444"/>
-                    </g>
-                    <g transform="translate(40, 10) scale(0.7)">
-                        <circle cx="100" cy="30" r="10" fill="#2563eb"/>
-                        <line x1="100" y1="40" x2="70" y2="70" stroke="#64748b"/><line x1="100" y1="40" x2="130" y2="70" stroke="#64748b"/>
-                        <circle cx="70" cy="70" r="8" fill="#10b981"/><circle cx="130" cy="70" r="8" fill="#ef4444"/>
-                    </g>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> สุ่มสร้าง Decision Tree หลายๆ ต้น แล้วนำผลลัพธ์การทำนายของทุกต้นมาโหวตรวมกันเพื่อลดความผิดพลาด</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>n_estimators:</b> จำนวนต้นไม้ในป่า</li>
-                    <li><b>max_features:</b> สัดส่วนฟีเจอร์ที่สุ่มมาใช้ ('sqrt', 'log2')</li>
-                    <li><b>max_depth:</b> ความลึกสูงสุดของแต่ละต้นไม้</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 6. SVM -->
-        <div class="card">
-            <h3>6. SVM <span class="badge">Margin-based</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <circle cx="50" cy="40" r="5" fill="#ef4444"/><circle cx="70" cy="70" r="5" fill="#ef4444"/>
-                    <circle cx="130" cy="90" r="5" fill="#10b981"/><circle cx="150" cy="120" r="5" fill="#10b981"/>
-                    <line x1="30" y1="130" x2="170" y2="20" stroke="#2563eb" stroke-width="3"/>
-                    <line x1="50" y1="140" x2="190" y2="30" stroke="#94a3b8" stroke-dasharray="3"/>
-                    <line x1="10" y1="120" x2="150" y2="10" stroke="#94a3b8" stroke-dasharray="3"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> ค้นหาเส้น/ระนาบแบ่งข้อมูล (Hyperplane) ที่มีระยะห่าง (Margin) จากจุด Support Vectors มากที่สุด</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>C:</b> บทลงโทษจุดที่อยู่ผิดฝั่ง (C สูง = เข้มงวดเสี่ยง Overfit)</li>
-                    <li><b>kernel:</b> ฟังก์ชันแปลงมิติ ('linear', 'rbf', 'poly')</li>
-                    <li><b>gamma:</b> รัศมีอิทธิพลของข้อมูลจุดหนึ่งๆ (ใน RBF)</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 8. MLP -->
-        <div class="card">
-            <h3>8. MLP (Neural Network) <span class="badge">Neural Net</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <circle cx="40" cy="40" r="8" fill="#2563eb"/><circle cx="40" cy="110" r="8" fill="#2563eb"/>
-                    <circle cx="100" cy="30" r="8" fill="#f59e0b"/><circle cx="100" cy="75" r="8" fill="#f59e0b"/><circle cx="100" cy="120" r="8" fill="#f59e0b"/>
-                    <circle cx="160" cy="75" r="8" fill="#10b981"/>
-                    <line x1="48" y1="40" x2="92" y2="30" stroke="#cbd5e1"/><line x1="48" y1="40" x2="92" y2="75" stroke="#cbd5e1"/>
-                    <line x1="48" y1="110" x2="92" y2="75" stroke="#cbd5e1"/><line x1="48" y1="110" x2="92" y2="120" stroke="#cbd5e1"/>
-                    <line x1="108" y1="30" x2="152" y2="75" stroke="#cbd5e1"/><line x1="108" y1="75" x2="152" y2="75" stroke="#cbd5e1"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> โครงข่ายประสาทเทียมหลายชั้น ปรับเปลี่ยนน้ำหนัก Weights ผ่านการส่งข้อมูลย้อนกลับ (Backpropagation)</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>hidden_layer_sizes:</b> จำนวน Layer และ Neuron ในแต่ละชั้น</li>
-                    <li><b>activation:</b> ฟังก์ชันกระตุ้น ('relu', 'tanh', 'logistic')</li>
-                    <li><b>learning_rate_init:</b> อัตราการปรับเปลี่ยนน้ำหนัก</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 13. XGBoost -->
-        <div class="card">
-            <h3>13. XGBoost <span class="badge">Boosting</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <rect x="30" y="60" width="30" height="30" fill="#93c5fd" rx="4"/>
-                    <text x="65" y="80" font-size="16">+</text>
-                    <rect x="85" y="60" width="30" height="30" fill="#60a5fa" rx="4"/>
-                    <text x="120" y="80" font-size="16">=</text>
-                    <rect x="140" y="50" width="40" height="50" fill="#2563eb" rx="4"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> สร้าง Decision Tree เรียงต่อกันเป็นสาย โดยต้นใหม่จะโฟกัสเรียนรู้และแก้ไขข้อผิดพลาดของต้นก่อนหน้า</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>learning_rate ($\eta$):</b> อัตราการลดผลกระทบต้นใหม่ (0.01 - 0.2)</li>
-                    <li><b>max_depth:</b> ความลึกสูงสุดของต้นไม้แต่ละต้น</li>
-                    <li><b>subsample:</b> สัดส่วนการสุ่มข้อมูลเข้าฝึกฝน</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 14. Stacking -->
-        <div class="card">
-            <h3>14. Stacking <span class="badge">Meta-Learning</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <rect x="30" y="30" width="40" height="30" fill="#94a3b8" rx="4"/>
-                    <rect x="30" y="90" width="40" height="30" fill="#94a3b8" rx="4"/>
-                    <path d="M 75 45 L 125 75 M 75 105 L 125 75" stroke="#64748b" stroke-width="2"/>
-                    <rect x="130" y="60" width="45" height="30" fill="#2563eb" rx="4"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> รวมผลการทำนายจากหลายโมเดลหลัก แล้วส่งต่อให้ Meta-Model ทำหน้าที่สรุปผลการตัดสินใจขั้นสุดท้าย</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>final_estimator:</b> โมเดลรวบรวมผลลัพธ์ (เช่น Logistic)</li>
-                    <li><b>cv:</b> จำนวน Fold ในการทำ Cross-Validation ป้องกันข้อมูลรั่ว</li>
-                </ul>
-            </div>
-        </div>
     </div>
 
-    <!-- Unsupervised & Sequential -->
-    <h2 class="section-title">2. Unsupervised & Deep Learning Architecture</h2>
-    <div class="grid">
-        
-        <!-- 7. K-Means -->
-        <div class="card">
-            <h3>7. K-Means <span class="badge">Clustering</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <circle cx="50" cy="50" r="22" fill="#fee2e2" stroke="#ef4444"/><circle cx="50" cy="50" r="3" fill="#ef4444"/>
-                    <circle cx="40" cy="40" r="3" fill="#ef4444"/><circle cx="60" cy="55" r="3" fill="#ef4444"/>
-                    <circle cx="140" cy="100" r="22" fill="#d1fae5" stroke="#10b981"/><circle cx="140" cy="100" r="3" fill="#10b981"/>
-                    <circle cx="130" cy="110" r="3" fill="#10b981"/><circle cx="150" cy="90" r="3" fill="#10b981"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> จัดกลุ่มข้อมูลที่ไม่มี Label โดยคำนวณขยับจุดศูนย์กลาง (Centroid) ของกลุ่มข้อมูล K กลุ่มจนลู่เข้าที่</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>n_clusters (K):</b> จำนวนกลุ่มที่ต้องการ (หาจาก Elbow Method)</li>
-                    <li><b>init:</b> วิธีการกำหนดจุดเริ่มต้นศูนย์กลาง ('k-means++')</li>
-                    <li><b>max_iter:</b> จำนวนรอบสูงสุดในการขยับจุด</li>
-                </ul>
-            </div>
-        </div>
+    <script>
+        // ฟังก์ชันเพิ่ม Parameter ใหม่เข้า List
+        function addParam(button) {
+            const form = button.parentElement;
+            const nameInput = form.querySelector('.input-name');
+            const descInput = form.querySelector('.input-desc');
+            const paramList = form.parentElement.querySelector('.param-list');
 
-        <!-- 9. CNN -->
-        <div class="card">
-            <h3>9. CNN <span class="badge">Vision</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <rect x="20" y="30" width="40" height="40" fill="#cbd5e1" stroke="#475569"/>
-                    <rect x="80" y="45" width="30" height="30" fill="#93c5fd" stroke="#2563eb"/>
-                    <rect x="130" y="55" width="10" height="40" fill="#10b981"/>
-                    <path d="M 60 40 L 80 50 M 60 60 L 80 70" stroke="#94a3b8" stroke-dasharray="2"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> เลื่อนสแกนแผ่น Filter เพื่อสกัดฟีเจอร์เด่นของรูปภาพ (เช่น เส้น ขอบ มุม) ก่อนส่งต่อให้ Dense Layer</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>kernel_size:</b> ขนาดของแผ่น Filter สแกนภาพ (เช่น 3x3)</li>
-                    <li><b>filters:</b> จำนวนแผ่น Filter ในชั้นประมวลผล</li>
-                    <li><b>stride:</b> ระยะการก้าวข้ามของ Filter ในการสแกน</li>
-                </ul>
-            </div>
-        </div>
+            const name = nameInput.value.trim();
+            const desc = descInput.value.trim();
 
-        <!-- 10. LSTM -->
-        <div class="card">
-            <h3>10. LSTM <span class="badge">Sequential</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <rect x="60" y="40" width="80" height="60" fill="#e0e7ff" stroke="#3730a3" rx="8"/>
-                    <path d="M 20 70 L 60 70 M 140 70 L 180 70" stroke="#3730a3" stroke-width="3"/>
-                    <path d="M 100 130 L 100 100" stroke="#3730a3" stroke-width="3"/>
-                    <circle cx="100" cy="70" r="8" fill="#f59e0b"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> มีประตูควบคุมการจำ/ลืมข้อมูล (Forget/Input Gate) เพื่อประมวลผลข้อมูลอนุกรมเวลาที่มีลำดับยาวๆ</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>units:</b> จำนวน Node ในชั้น LSTM Cell</li>
-                    <li><b>dropout:</b> สัดส่วนการสุ่มปิด Node ป้องกัน Overfit</li>
-                    <li><b>return_sequences:</b> การคืนค่าผลลัพธ์ทุก Time step</li>
-                </ul>
-            </div>
-        </div>
+            if (name === '' || desc === '') {
+                alert('กรุณากรอกทั้งชื่อ Parameter และคำอธิบายครับ');
+                return;
+            }
 
-        <!-- 11. Transformer -->
-        <div class="card">
-            <h3>11. Transformer <span class="badge">Attention</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <rect x="50" y="80" width="100" height="30" fill="#93c5fd" rx="4"/>
-                    <rect x="50" y="30" width="100" height="30" fill="#fca5a5" rx="4"/>
-                    <path d="M 70 80 Q 100 60 130 30 M 130 80 Q 100 60 70 30" stroke="#64748b" stroke-width="2"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> ประมวลผลข้อความพร้อมกันทั้งประโยคแบบขนาน โดยใช้ Self-Attention คำนวณความสัมพันธ์ระหว่างคำ</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>nhead:</b> จำนวนหัวคำนวณ Multi-Head Attention</li>
-                    <li><b>num_encoder_layers:</b> จำนวนชั้นโครงสร้างประมวลผล</li>
-                    <li><b>d_model:</b> ขนาดมิติความหมายข้อมูล (Embedding Dim)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+            const li = document.createElement('li');
+            li.innerHTML = `<b>${name}:</b> ${desc} <span class="btn-delete" onclick="removeParam(this)">×</span>`;
+            
+            paramList.appendChild(li);
 
-    <!-- Reinforcement Learning -->
-    <h2 class="section-title">3. Reinforcement Learning (การเรียนรู้แบบเสริมกำลัง)</h2>
-    <div class="grid">
-        
-        <!-- 12. Reinforcement Learning -->
-        <div class="card">
-            <h3>12. Reinforcement Learning <span class="badge">Reward-based</span></h3>
-            <div class="viz-container">
-                <svg viewBox="0 0 200 150">
-                    <rect x="30" y="55" width="40" height="40" fill="#2563eb" rx="8"/>
-                    <rect x="130" y="55" width="40" height="40" fill="#10b981" rx="8"/>
-                    <path d="M 75 60 C 90 40, 110 40, 125 60" fill="none" stroke="#64748b" stroke-width="2"/>
-                    <path d="M 125 90 C 110 110, 90 110, 75 90" fill="none" stroke="#f59e0b" stroke-width="2"/>
-                </svg>
-            </div>
-            <p class="desc"><b>หลักการ:</b> ให้ Agent ลองผิดลองถูกใน สภาพแวดล้อม เพื่อเรียนรู้การกระทำ (Action) ที่จะได้รับ รางวัลสะสมสูงสุด</p>
-            <div class="tuning-box">
-                <span class="tuning-title">⚙️ Hyperparameter Tuning:</span>
-                <ul>
-                    <li><b>learning_rate ($\alpha$):</b> อัตราการอัปเดตค่าความรู้ Q-value</li>
-                    <li><b>discount_factor ($\gamma$):</b> ค่าน้ำหนักรางวัลในอนาคต</li>
-                    <li><b>epsilon ($\epsilon$):</b> สัดส่วนการสุ่มลองสิ่งใหม่ (Exploration)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+            // เคลียร์ค่าในช่องพิมพ์
+            nameInput.value = '';
+            descInput.value = '';
+        }
 
+        // ฟังก์ชันลบ Parameter
+        function removeParam(span) {
+            span.parentElement.remove();
+        }
+    </script>
 </body>
 </html>
