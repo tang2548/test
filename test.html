@@ -11,6 +11,8 @@
             --sidebar-bg: #ffffff;
             --text: #1e293b;
             --border: #e2e8f0;
+            --pros-color: #16a34a;
+            --cons-color: #dc2626;
         }
         * { box-sizing: border-box; }
         body {
@@ -71,7 +73,51 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* MLP Playground */
+        /* General Model Card Layout */
+        .model-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            max-width: 850px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .model-card h2 { margin-top: 0; color: #0f172a; font-size: 1.4rem; }
+        .model-desc { color: #475569; line-height: 1.6; font-size: 0.95rem; margin-bottom: 24px; }
+        
+        .pros-cons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .box-pros {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .box-pros h4 { margin: 0 0 8px 0; color: var(--pros-color); font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+        
+        .box-cons {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .box-cons h4 { margin: 0 0 8px 0; color: var(--cons-color); font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+
+        .box-pros ul, .box-cons ul {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 0.88rem;
+            color: #334155;
+            line-height: 1.5;
+        }
+        .box-pros li, .box-cons li { margin-bottom: 6px; }
+        .box-pros li:last-child, .box-cons li:last-child { margin-bottom: 0; }
+
+        /* MLP Playground Custom Layout */
         .playground-title { margin-top: 0; color: #0f172a; }
         .playground-desc { color: #475569; font-size: 0.9rem; margin-bottom: 20px; }
         
@@ -83,6 +129,7 @@
             padding: 20px;
             border-radius: 12px;
             border: 1px solid var(--border);
+            max-width: 850px;
         }
         .canvas-box {
             display: flex;
@@ -96,7 +143,6 @@
             background: #fafafa;
         }
 
-        /* Controls */
         .controls-panel {
             grid-column: span 2;
             background: #f1f5f9;
@@ -140,12 +186,12 @@
             gap: 16px;
         }
 
-        /* Information Cards */
         .info-cards {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 16px;
             margin-top: 20px;
+            max-width: 850px;
         }
         .info-card {
             background: white;
@@ -155,17 +201,6 @@
         }
         .info-card h5 { margin: 0 0 8px 0; color: var(--primary); font-size: 0.88rem; }
         .info-card p { margin: 0; font-size: 0.8rem; color: #475569; line-height: 1.4; }
-
-        /* Standard Cards Layout */
-        .model-card {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            max-width: 700px;
-        }
-        .model-card h2 { margin-top: 0; color: #0f172a; }
-        .model-card p { color: #475569; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -175,14 +210,14 @@
         <div class="sidebar-header">ML Visualizer</div>
         
         <div class="menu-group">Supervised Learning</div>
-        <div class="nav-item" onclick="switchTab('m1', this)">01. Linear Regression</div>
+        <div class="nav-item active" onclick="switchTab('m1', this)">01. Linear Regression</div>
         <div class="nav-item" onclick="switchTab('m2', this)">02. Logistic Regression</div>
         <div class="nav-item" onclick="switchTab('m3', this)">03. k-Nearest Neighbors</div>
         <div class="nav-item" onclick="switchTab('m4', this)">04. Decision Tree</div>
         <div class="nav-item" onclick="switchTab('m5', this)">05. Random Forest</div>
         <div class="nav-item" onclick="switchTab('m6', this)">06. SVM</div>
         <div class="nav-item" onclick="switchTab('m7', this)">07. K-Means</div>
-        <div class="nav-item active" onclick="switchTab('mlp', this)">08. MLP Neural Net</div>
+        <div class="nav-item" onclick="switchTab('mlp', this)">08. MLP Neural Net</div>
         <div class="nav-item" onclick="switchTab('m13', this)">13. XGBoost</div>
         <div class="nav-item" onclick="switchTab('m14', this)">14. Stacking</div>
 
@@ -198,8 +233,199 @@
     <!-- Main Content Area -->
     <div class="main-content">
 
-        <!-- 08. MLP Neural Net Page -->
-        <div id="mlp" class="tab-content active">
+        <!-- 01. Linear Regression -->
+        <div id="m1" class="tab-content active">
+            <div class="model-card">
+                <h2>01. Linear Regression</h2>
+                <div class="model-desc">
+                    อัลกอริทึมพื้นฐานสำหรับงานพยากรณ์เชิงตัวเลข (Regression) โดยการหาเส้นตรง (Best-fit line) ที่แสดงความสัมพันธ์ระหว่างตัวแปรอิสระ (X) และตัวแปรตาม (Y) ให้มีค่าความผิดพลาดน้อยที่สุด
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>เข้าใจง่าย คำนวณรวดเร็ว ไม่กินทรัพยากรเครื่อง</li>
+                            <li>แปลความหมายค่าสัมประสิทธิ์ (Coefficient) ได้ง่าย ชัดเจน</li>
+                            <li>เหมาะเป็น Baseline Model ในการเริ่มต้นทำพยากรณ์</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>รองรับเฉพาะความสัมพันธ์แบบ "เส้นตรง" เท่านั้น</li>
+                            <li>ไม่สามารถจับรูปแบบข้อมูลที่มีความซับซ้อน (Non-linear) ได้</li>
+                            <li>ไวต่อค่าผิดปกติ (Outliers) อย่างมาก</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 02. Logistic Regression -->
+        <div id="m2" class="tab-content">
+            <div class="model-card">
+                <h2>02. Logistic Regression</h2>
+                <div class="model-desc">
+                    โมเดลการจำแนกประเภท (Classification) สำหรับพยากรณ์ผลลัพธ์ที่เป็นหมวดหมู่ โดยใช้ Sigmoid Function แปลงค่าผลลัพธ์ให้อยู่ในช่วงความน่าจะเป็น 0 ถึง 1 เหมาะกับงานจำแนกแบบ 2 คลาส (Binary Classification)
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>คำนวณและแสดงค่าความน่าจะเป็น (Probability) ได้โดยตรง</li>
+                            <li>ประมวลผลไว และเกิดปัญหา Overfitting ได้ยาก</li>
+                            <li>อธิบายปัจจัยที่มีผลต่อการตัดสินใจได้ชัดเจน</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>สร้างขอบเขตการแบ่งได้เฉพาะเส้นตรง/ระนาบตรงเท่านั้น</li>
+                            <li>ต้องเสียเวลาปรับแต่ง Feature (Feature Engineering) หากข้อมูลซับซ้อน</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 03. k-Nearest Neighbors -->
+        <div id="m3" class="tab-content">
+            <div class="model-card">
+                <h2>03. k-Nearest Neighbors (k-NN)</h2>
+                <div class="model-desc">
+                    อัลกอริทึมการจำแนกกลุ่มแบบ Lazy Learning ที่ตัดสินใจจำแนกข้อมูลใหม่ตามกลุ่มของข้อมูลเพื่อนบ้านที่อยู่ใกล้ที่สุดจำนวน k ตัว โดยวัดจากระยะห่าง (เช่น Euclidean Distance)
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>หลักการเข้าใจง่ายมาก ไม่ต้องมีขั้นตอนการปรับเทรนโมเดล</li>
+                            <li>ปรับเปลี่ยนตามข้อมูลใหม่ที่เพิ่มเข้ามาได้ทันที</li>
+                            <li>ไม่จำเป็นต้องตั้งสมมติฐานเกี่ยวกับรูปแบบข้อมูล</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>ประมวลผลช้ามากเมื่อเจอชุดข้อมูลขนาดใหญ่</li>
+                            <li>ใช้หน่วยความจำสูงเพราะต้องเก็บข้อมูลทั้งหมดไว้คำนวณ</li>
+                            <li>ไวต่อสเกลข้อมูลที่ไม่เท่ากัน และข้อมูลรบกวน (Noise)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 04. Decision Tree -->
+        <div id="m4" class="tab-content">
+            <div class="model-card">
+                <h2>04. Decision Tree</h2>
+                <div class="model-desc">
+                    การจำแนกข้อมูลโดยใช้โครงสร้างแผนผังต้นไม้ แตกกิ่งก้านสาขาตามเงื่อนไข IF-ELSE จากคุณลักษณะของข้อมูล โดยใช้เกณฑ์วัดอย่าง Information Gain หรือ Gini Impurity
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>อ่านและแปลความหมายตามเงื่อนไขการตัดสินใจได้ง่ายมาก</li>
+                            <li>ไม่ต้องทำ Data Scaling ก่อนการนำไปใช้งาน</li>
+                            <li>จัดการได้ทั้งข้อมูลที่เป็นตัวเลขและหมวดหมู่</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>เกิดปัญหา Overfitting ได้ง่ายมากหากต้นไม้ลึกเกินไป</li>
+                            <li>มีความไม่เสถียร เปลี่ยนแปลงข้อมูลเล็กน้อยอาจได้ต้นไม้คนละทรง</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 05. Random Forest -->
+        <div id="m5" class="tab-content">
+            <div class="model-card">
+                <h2>05. Random Forest</h2>
+                <div class="model-desc">
+                    โมเดลแบบ Ensemble Learning ที่นำ Decision Tree หลายๆ ต้นมาทำงานร่วมกัน โดยการสุ่มชุดข้อมูลและสุ่มคุณลักษณะเพื่อเทรนแต่ละต้น แล้วนำผลลัพธ์มารวมกัน (Bagging / Majority Vote)
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>ลดปัญหา Overfitting ได้ดีกว่า Decision Tree ต้นเดียวอย่างมาก</li>
+                            <li>ความแม่นยำสูง และรองรับข้อมูลขนาดใหญ่ได้ดี</li>
+                            <li>ช่วยประเมินความสำคัญของตัวแปร (Feature Importance) ได้</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>ใช้เวลาเทรนและใช้หน่วยความจำในการประมวลผลเยอะขึ้น</li>
+                            <li>แปลความหมายและอธิบายเงื่อนไขการทำงานภายในได้ยากขึ้น</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 06. SVM -->
+        <div id="m6" class="tab-content">
+            <div class="model-card">
+                <h2>06. Support Vector Machine (SVM)</h2>
+                <div class="model-desc">
+                    อัลกอริทึมที่หาเส้นหรือระนาบแบ่ง (Hyperplane) ที่สร้างระยะห่าง (Margin) ระหว่างข้อมูลสองกลุ่มให้กว้างที่สุด และสามารถใช้ Kernel Trick ในการจัดการข้อมูลซับซ้อนได้
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>ทำงานได้ดีมากในชุดข้อมูลที่มีมิติต่างๆ สูง (High-dimensional)</li>
+                            <li>มีประสิทธิภาพสูงแม้มีจำนวนตัวอย่างน้อย</li>
+                            <li>รองรับเส้นแบ่งซับซ้อนด้วย Kernel Trick</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>ใช้เวลาประมวลผลนานมากหากชุดข้อมูลมีขนาดใหญ่</li>
+                            <li>ปรับจูน Hyperparameter (C, Gamma, Kernel) ให้พอดีได้ยาก</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 07. K-Means -->
+        <div id="m7" class="tab-content">
+            <div class="model-card">
+                <h2>07. K-Means Clustering</h2>
+                <div class="model-desc">
+                    อัลกอริทึม Unsupervised Learning สำหรับแบ่งกลุ่มข้อมูลโดยอัตโนมัติ โดยสร้างจุดศูนย์กลางกลุ่ม (Centroid) จำนวน K จุด และจัดข้อมูลเข้ากลุ่มที่อยู่ใกล้ที่สุดแบบวนซ้ำ
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>อัลกอริทึมเรียบง่าย ทำงานได้อย่างรวดเร็ว</li>
+                            <li>ขยายการทำงาน (Scale) รองรับข้อมูลขนาดใหญ่ได้ดี</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>ต้องระบุจำนวนกลุ่ม (K) ไว้ก่อนล่วงหน้า</li>
+                            <li>ไวต่อจุดเริ่มต้นของ Centroid และจุดรบกวน (Outliers)</li>
+                            <li>แบ่งกลุ่มได้ดีเฉพาะข้อมูลที่เป็นรูปทรงทรงกลม/กลุ่มชัดเจน</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 08. MLP Neural Net -->
+        <div id="mlp" class="tab-content">
             <h2 class="playground-title">08. MLP Neural Net (Multi-Layer Perceptron)</h2>
             <p class="playground-desc">
                 ขอบเขตแบ่งกลุ่มข้อมูลแบบเกลียว (Spiral) ด้วย Logistic Regression ทำไม่ได้เลย แต่ MLP ค่อยๆ ดัดเส้นแบ่งตามได้ — ดูแผนภาพขวาประกอบ เส้นหนา = น้ำหนักมาก
@@ -255,97 +481,182 @@
                     <p>hidden 2 ตัวมักติดอยู่ในเส้นตรงหลัก แต่ถ้าเพิ่มเป็น 12–16 ถึงจะดัดโค้งเลื้อยได้สมบูรณ์</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Other Models Pages -->
-        <div id="m1" class="tab-content">
-            <div class="model-card">
-                <h2>01. Linear Regression</h2>
-                <p>สร้างเส้นตรงหาความสัมพันธ์ระหว่างตัวแปรเพื่อทำนายค่าเชิงตัวเลขแบบต่อเนื่อง</p>
+            <div class="model-card" style="margin-top: 20px;">
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>เรียนรู้ความสัมพันธ์ซับซ้อนแบบ Non-linear ได้ดีมาก</li>
+                            <li>ยืดหยุ่น ประยุกต์ใช้กับประเภทข้อมูลได้หลากหลาย</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>ปรับจูนพารามิเตอร์ยาก ต้องใช้ข้อมูลจำนวนมากในการเทรน</li>
+                            <li>การทำงานภายในเป็นแบบกล่องดำ (Black Box) อธิบายเหตุผลได้ยาก</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div id="m2" class="tab-content">
-            <div class="model-card">
-                <h2>02. Logistic Regression</h2>
-                <p>จำแนกกลุ่มข้อมูลแบบ 2 คลาส (Binary Classification) ด้วย Sigmoid Function</p>
-            </div>
-        </div>
-
-        <div id="m3" class="tab-content">
-            <div class="model-card">
-                <h2>03. k-Nearest Neighbors</h2>
-                <p>จำแนกกลุ่มข้อมูลตามระยะห่างของเพื่อนบ้านใกล้ที่สุด k อันดับแรก</p>
-            </div>
-        </div>
-
-        <div id="m4" class="tab-content">
-            <div class="model-card">
-                <h2>04. Decision Tree</h2>
-                <p>สร้างแผนผังต้นไม้การตัดสินใจเพื่อแยกข้อมูลตามค่า Information Gain / Gini</p>
-            </div>
-        </div>
-
-        <div id="m5" class="tab-content">
-            <div class="model-card">
-                <h2>05. Random Forest</h2>
-                <p>สร้าง Decision Tree หลายๆ ต้นแล้วนำคำตอบมาทำ Ensemble Voting</p>
-            </div>
-        </div>
-
-        <div id="m6" class="tab-content">
-            <div class="model-card">
-                <h2>06. Support Vector Machine (SVM)</h2>
-                <p>หาเส้นแบ่ง Hyperplane ที่ให้ระยะห่าง Margin กว้างที่สุด</p>
-            </div>
-        </div>
-
-        <div id="m7" class="tab-content">
-            <div class="model-card">
-                <h2>07. K-Means Clustering</h2>
-                <p>การจัดกลุ่มข้อมูลแบบ Unsupervised Learning โดยใช้จุดศูนย์กลาง Centroid</p>
-            </div>
-        </div>
-
+        <!-- 09. CNN -->
         <div id="m9" class="tab-content">
             <div class="model-card">
                 <h2>09. Convolutional Neural Network (CNN)</h2>
-                <p>สกัดฟีเจอร์ของรูปภาพด้วย Kernel Filter สำหรับงานประมวลผลภาพ</p>
+                <div class="model-desc">
+                    สถาปัตยกรรม Deep Learning ที่ถูกออกแบบมาสำหรับประมวลผลข้อมูลที่มีลักษณะเป็นตาราง 2 มิติ โดยเฉพาะรูปภาพ ใช้ Kernel Filter ในการสกัด Feature เช่น เส้น ขอบ หรือพื้นผิว ออกมาโดยอัตโนมัติ
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>มีประสิทธิภาพสูงที่สุดสำหรับงานด้าน Computer Vision และรูปภาพ</li>
+                            <li>สามารถสกัด Feature เด่นจากภาพได้เอง ไม่ต้องใช้คนสกัด</li>
+                            <li>ลดจำนวนพารามิเตอร์ลงเมื่อเทียบกับ Fully Connected Layer ทั่วไป</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>ต้องการพลังคำนวณสูงมาก (จำเป็นต้องใช้ GPU)</li>
+                            <li>ต้องการชุดข้อมูลรูปภาพขนาดใหญ่มากในการฝึกสอนโมเดล</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- 10. LSTM -->
         <div id="m10" class="tab-content">
             <div class="model-card">
                 <h2>10. Long Short-Term Memory (LSTM)</h2>
-                <p>โครงข่ายประสาทสำหรับการประมวลผลข้อมูลลำดับเวลา (Time-series) และข้อความ</p>
+                <div class="model-desc">
+                    โครงข่ายประสาทแบบ Recurrent Neural Network (RNN) ชนิดพิเศษ ที่มีกลไก Gate (Forget, Input, Output) ในการควบคุมความจำ เหมาะสำหรับข้อมูลที่เป็นลำดับเวลา (Time-series) และภาษา
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>แก้ปัญหา Vanishing Gradient ใน RNN แบบดั้งเดิมได้ดี</li>
+                            <li>จดจำความสัมพันธ์ระยะยาวของข้อมูลลำดับเวลาได้แม่นยำ</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>โครงสร้างซับซ้อน และใช้เวลาในการเทรนค่อนข้างนาน</li>
+                            <li>ไม่สามารถประมวลผลแบบขนานได้ดีเนื่องจากต้องทำทีละลำดับ</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- 11. Transformer -->
         <div id="m11" class="tab-content">
             <div class="model-card">
                 <h2>11. Transformer</h2>
-                <p>สถาปัตยกรรมหลักของงาน NLP ที่ใช้กลไก Self-Attention ในการประมวลผล</p>
+                <div class="model-desc">
+                    สถาปัตยกรรมหลักของงาน NLP ยุคใหม่ ที่ใช้กลไก **Self-Attention** ในการประมวลผลข้อมูลทุกตำแหน่งพร้อมกัน เป็นเบื้องหลังของโมเดลภาษาระดับโลกอย่าง GPT และ BERT
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>เทรนได้เร็วเพราะประมวลผลแบบขนาน (Parallel Processing) ได้ดีมาก</li>
+                            <li>จับความสัมพันธ์ระหว่างคำที่อยู่ไกลกันได้อย่างแม่นยำสูง</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>กินทรัพยากรคำนวณและหน่วยความจำมหาศาล ($O(N^2)$)</li>
+                            <li>ต้องใช้ข้อมูลมหาศาลสำหรับการทำ Pre-training</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- 12. Q-Learning -->
         <div id="m12" class="tab-content">
             <div class="model-card">
                 <h2>12. Q-Learning</h2>
-                <p>การเรียนรู้แบบ Reinforcement Learning ผ่านการอัปเดต Q-Table</p>
+                <div class="model-desc">
+                    อัลกอริทึม Reinforcement Learning แบบ Model-Free ที่เรียนรู้ว่า Agent ควรเลือกแอคชันใดในสถานการณ์ต่างๆ เพื่อให้ได้รับรางวัลสะสม (Reward) สูงสุดผ่านการอัปเดต Q-Table
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>ไม่ต้องมีความรู้หรือสร้างโมเดลเกี่ยวกับสภาพแวดล้อมล่วงหน้า</li>
+                            <li>เรียนรู้กลยุทธ์ที่ดีที่สุดได้เองผ่านการลองผิดลองถูก</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>ไม่เหมาะกับสถานการณ์ที่มี State และ Action ขนาดใหญ่เกินไป</li>
+                            <li>ใช้เวลาลองผิดลองถูกนานมากก่อนจะเริ่มทำงานได้อย่างถูกต้อง</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- 13. XGBoost -->
         <div id="m13" class="tab-content">
             <div class="model-card">
                 <h2>13. XGBoost</h2>
-                <p>Gradient Boosting Tree ที่มีประสิทธิภาพสูงสำหรับข้อมูล Tabular Data</p>
+                <div class="model-desc">
+                    อัลกอริทึมการต่อเติมต้นไม้แบบ Gradient Boosting ที่ถูกออกแบบให้มีประสิทธิภาพและความเร็วสูง มีระบบควบคุม Overfitting ในตัว และเป็นที่นิยมอย่างมากในงานแข่งขันสถิติ/วิทยาการข้อมูล
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>ความแม่นยำสูงมาก ทำงานได้ดีเยี่ยมกับข้อมูลรูปแบบตาราง (Tabular Data)</li>
+                            <li>มีระบบ Regularization ช่วยป้องกันปัญหา Overfitting</li>
+                            <li>รองรับการประมวลผลแบบขนาน ทำให้เทรนได้อย่างรวดเร็ว</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>มี Hyperparameter ให้ปรับแต่งเยอะมาก ยากต่อการจูนให้สมบูรณ์</li>
+                            <li>เสี่ยงต่อการ Overfitting หากใช้ข้อมูลรบกวนมากเกินไป</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- 14. Stacking -->
         <div id="m14" class="tab-content">
             <div class="model-card">
                 <h2>14. Stacking</h2>
-                <p>รวมผลลัพธ์ของหลายโมเดลส่งต่อให้ Meta-Learner ทำนายผลลัพธ์สุดท้าย</p>
+                <div class="model-desc">
+                    เทคนิคการผสานโมเดล (Ensemble Learning) โดยการนำผลทำนายของโมเดลที่แตกต่างกันหลายๆ โมเดล (Base Models) มาส่งต่อให้โมเดลอีกตัว (Meta-Learner) ช่วยสรุปการทำนายขั้นสุดท้าย
+                </div>
+                <div class="pros-cons-grid">
+                    <div class="box-pros">
+                        <h4>✔ ข้อดี</h4>
+                        <ul>
+                            <li>รวมจุดแข็งของหลายโมเดลเข้าด้วยกัน ช่วยเพิ่มความแม่นยำสูงสุด</li>
+                            <li>ยืดหยุ่น สามารถเลือกผสมโมเดลต่างชนิดกันได้ตามต้องการ</li>
+                        </ul>
+                    </div>
+                    <div class="box-cons">
+                        <h4>✖ ข้อเสีย</h4>
+                        <ul>
+                            <li>ระบบมีความซับซ้อนสูง และใช้เวลาประมวลผลนานที่สุด</li>
+                            <li>เสี่ยงต่อการ Overfitting หากกระบวนการ Cross-validation ไม่รัดกุม</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
