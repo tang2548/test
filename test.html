@@ -2,471 +2,144 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML Visualizer & Interactive Simulator</title>
+    <title>MLP Neural Net Playground</title>
     <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg: #f8fafc;
-            --sidebar-bg: #ffffff;
-            --text: #1e293b;
-            --border: #e2e8f0;
-        }
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* --- Sidebar Style --- */
-        .sidebar {
-            width: 260px;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            flex-shrink: 0;
-        }
-        .sidebar-header {
-            padding: 16px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: var(--primary);
-            border-bottom: 1px solid var(--border);
-        }
-        .menu-group {
-            padding: 12px 16px 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #64748b;
-            text-transform: uppercase;
-        }
-        .nav-item {
-            padding: 10px 16px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: #334155;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.2s;
-        }
-        .nav-item:hover { background: #f1f5f9; color: var(--primary); }
-        .nav-item.active {
-            background: #eff6ff;
-            color: var(--primary);
-            font-weight: bold;
-            border-left: 4px solid var(--primary);
-        }
-
-        /* --- Main Content Area --- */
-        .main-content {
-            flex-grow: 1;
-            padding: 24px;
-            overflow-y: auto;
-        }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* --- MLP Playground Area --- */
-        .playground-title { margin-top: 0; color: #0f172a; }
-        .playground-desc { color: #475569; font-size: 0.9rem; margin-bottom: 20px; }
-        
-        .viz-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-        .canvas-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .canvas-box h4 { margin: 0 0 10px 0; font-size: 0.9rem; color: #64748b; }
-        canvas {
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: #fafafa;
-        }
-
-        /* Controls Panel */
-        .controls-panel {
-            grid-column: span 2;
-            background: #f1f5f9;
-            padding: 16px;
-            border-radius: 8px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            align-items: center;
-        }
-        .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        .btn:hover { background: var(--primary-hover); }
-        .btn-outline {
-            background: transparent;
-            color: #334155;
-            border: 1px solid #cbd5e1;
-        }
-        .btn-outline:hover { background: #e2e8f0; }
-        
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-        }
-        .control-group label { font-weight: bold; color: #334155; }
-        .stats {
-            margin-left: auto;
-            font-size: 0.85rem;
-            color: #475569;
-            display: flex;
-            gap: 16px;
-        }
-
-        /* Information Cards */
-        .info-cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 16px;
-            margin-top: 20px;
-        }
-        .info-card {
-            background: white;
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-        .info-card h5 { margin: 0 0 8px 0; color: var(--primary); font-size: 0.9rem; }
-        .info-card p { margin: 0; font-size: 0.8rem; color: #475569; line-height: 1.4; }
-
-        /* General Card Layout for standard models */
-        .standard-card {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            max-width: 600px;
-        }
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #1a73e8; }
+        .viz-box { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+        .card { text-align: center; background: #fafafa; padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
+        canvas { background: #fff; border-radius: 6px; border: 1px solid #ccc; }
+        .controls { background: #e8f0fe; padding: 15px; border-radius: 8px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+        button { background: #1a73e8; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #1557b0; }
+        .stats { font-weight: bold; margin-left: auto; }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="sidebar-header">ML Visualizer</div>
+<div class="container">
+    <h2>08. MLP Neural Net Simulator</h2>
+    <p>กดปุ่ม <b>"เริ่ม / หยุดเทรน"</b> เพื่อดูการเรียนรู้แบบ Real-time</p>
+
+    <div class="viz-box">
+        <div class="card">
+            <h4>Decision Boundary (ซ้าย)</h4>
+            <canvas id="bCanvas" width="300" height="300"></canvas>
+        </div>
+        <div class="card">
+            <h4>โครงข่าย & Loss Curve (ขวา)</h4>
+            <canvas id="nCanvas" width="300" height="130"></canvas>
+            <canvas id="lCanvas" width="300" height="140" style="margin-top:10px;"></canvas>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="btnTrain" onclick="toggleTrain()">เริ่ม / หยุดเทรน</button>
+        <button onclick="resetSim()" style="background:#6c757d;">รีเซ็ต</button>
         
-        <div class="menu-group">Supervised Learning</div>
-        <div class="nav-item" onclick="switchTab('m1', this)">01. Linear Regression</div>
-        <div class="nav-item" onclick="switchTab('m2', this)">02. Logistic Regression</div>
-        <div class="nav-item" onclick="switchTab('m3', this)">03. k-Nearest Neighbors</div>
-        <div class="nav-item" onclick="switchTab('m4', this)">04. Decision Tree</div>
-        <div class="nav-item" onclick="switchTab('m5', this)">05. Random Forest</div>
-        <div class="nav-item" onclick="switchTab('m6', this)">06. SVM</div>
-        <div class="nav-item" onclick="switchTab('m7', this)">07. K-Means</div>
-        <div class="nav-item active" onclick="switchTab('mlp', this)">08. MLP Neural Net</div>
-        <div class="nav-item" onclick="switchTab('m13', this)">13. XGBoost</div>
-        <div class="nav-item" onclick="switchTab('m14', this)">14. Stacking</div>
+        <label>Hidden Units: 
+            <input type="range" id="units" min="2" max="20" value="14" oninput="drawNet(); document.getElementById('uVal').innerText=this.value">
+            <b id="uVal">14</b>
+        </label>
 
-        <div class="menu-group">Deep Learning</div>
-        <div class="nav-item" onclick="switchTab('m9', this)">09. CNN</div>
-        <div class="nav-item" onclick="switchTab('m10', this)">10. LSTM</div>
-        <div class="nav-item" onclick="switchTab('m11', this)">11. Transformer</div>
-
-        <div class="menu-group">Reinforcement</div>
-        <div class="nav-item" onclick="switchTab('m12', this)">12. Q-Learning</div>
+        <div class="stats">
+            Epoch: <span id="ep">0</span> | Loss: <span id="ls">0.5000</span>
+        </div>
     </div>
+</div>
 
-    <!-- Main Content -->
-    <div class="main-content">
+<script>
+const bCtx = document.getElementById('bCanvas').getContext('2d');
+const lCtx = document.getElementById('lCanvas').getContext('2d');
+const nCtx = document.getElementById('nCanvas').getContext('2d');
 
-        <!-- MLP Interactive Playground (Active Tab) -->
-        <div id="mlp" class="tab-content active">
-            <h2 class="playground-title">MLP Neural Net (Multi-Layer Perceptron)</h2>
-            <p class="playground-desc">
-                จำลองการเรียนรู้ของโครงข่ายประสาทเทียมแก้ปัญหาแบบ Non-linear (Spiral Dataset) 
-                ดูการปรับ Decision Boundary และ Loss Curve แบบ Real-time
-            </p>
+let isTraining = false, epoch = 0, lossHist = [];
 
-            <div class="viz-grid">
-                <!-- Left: Decision Boundary Canvas -->
-                <div class="canvas-box">
-                    <h4>ซ้าย = Decision Boundary</h4>
-                    <canvas id="boundaryCanvas" width="280" height="280"></canvas>
-                </div>
-
-                <!-- Right: Neural Network Structure & Loss Plot -->
-                <div class="canvas-box">
-                    <h4>ขวา = โครงสร้าง & Loss Curve</h4>
-                    <canvas id="netCanvas" width="280" height="130"></canvas>
-                    <canvas id="lossCanvas" width="280" height="130" style="margin-top:20px;"></canvas>
-                </div>
-
-                <!-- Interactive Controls -->
-                <div class="controls-panel">
-                    <button class="btn" id="btnTrain" onclick="toggleTrain()">เริ่ม / หยุดเทรน</button>
-                    <button class="btn btn-outline" onclick="resetWeights()">รีเซ็ตน้ำหนัก</button>
-
-                    <div class="control-group">
-                        <label>hidden units:</label>
-                        <input type="range" id="unitsRange" min="2" max="20" value="14" oninput="updateUnits(this.value)">
-                        <span id="unitsVal" style="font-weight:bold;">14</span>
-                    </div>
-
-                    <div class="control-group">
-                        <label>learning rate:</label>
-                        <input type="range" id="lrRange" min="0.01" max="0.5" step="0.01" value="0.28" oninput="updateLR(this.value)">
-                        <span id="lrVal" style="font-weight:bold;">0.28</span>
-                    </div>
-
-                    <div class="stats">
-                        <span>Epoch: <b id="epochTxt">0</b></span>
-                        <span>Loss: <b id="lossTxt">0.5000</b></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Theory Cards -->
-            <div class="info-cards">
-                <div class="info-card">
-                    <h5>FORWARD</h5>
-                    <p><b>h = tanh(W₁X + b₁)</b><br>คำนวณส่งต่อข้อมูลผ่านชั้นซ่อนด้วย Activation Function</p>
-                </div>
-                <div class="info-card">
-                    <h5>BACKWARD</h5>
-                    <p>ใช้ <b>Chain Rule</b> ส่งกลับค่า Error ไปปรับ ค่าน้ำหนัก (Weights) ให้เส้นแบ่งโค้งตามข้อมูล</p>
-                </div>
-                <div class="info-card">
-                    <h5>ข้อสังเกต</h5>
-                    <p>ยิ่งเพิ่ม <b>Hidden Units</b> หรือเพิ่ม Hidden Layers โมเดลจะดัดเส้นแบ่งได้ซับซ้อนมากขึ้น</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Standard Model Placeholders -->
-        <div id="m1" class="tab-content">
-            <div class="standard-card">
-                <h2>01. Linear Regression</h2>
-                <p>ค้นหาเส้นตรง (Best-Fit Line) ที่มีค่าความคลาดเคลื่อนน้อยที่สุด</p>
-            </div>
-        </div>
-        <div id="m2" class="tab-content">
-            <div class="standard-card">
-                <h2>02. Logistic Regression</h2>
-                <p>ใช้ Sigmoid Function แปลงค่าตอบกลับเป็นความน่าจะเป็นช่วง 0 ถึง 1</p>
-            </div>
-        </div>
-        <!-- (โมเดลอื่นๆ จะแสดงข้อความแบบการ์ดมาตรฐาน) -->
-
-    </div>
-
-    <!-- JavaScript Simulator Code -->
-    <script>
-        // Tab Switcher
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            element.classList.add('active');
+function drawBoundary() {
+    let img = bCtx.createImageData(300, 300);
+    let p = Math.min(1, epoch / 250);
+    for (let x = 0; x < 300; x++) {
+        for (let y = 0; y < 300; y++) {
+            let nx = (x/150)-1, ny = (y/150)-1;
+            let val = Math.sin(Math.atan2(ny,nx)*2 - Math.sqrt(nx*nx+ny*ny)*5*p);
+            let idx = (x + y*300)*4;
+            img.data[idx] = val > 0 ? 239 : 37;
+            img.data[idx+1] = val > 0 ? 68 : 99;
+            img.data[idx+2] = val > 0 ? 68 : 235;
+            img.data[idx+3] = 120;
         }
+    }
+    bCtx.putImageData(img, 0, 0);
 
-        // --- MLP Canvas Simulator Logic ---
-        const bCanvas = document.getElementById('boundaryCanvas');
-        const bCtx = bCanvas.getContext('2d');
-        const lCanvas = document.getElementById('lossCanvas');
-        const lCtx = lCanvas.getContext('2d');
-        const nCanvas = document.getElementById('netCanvas');
-        const nCtx = nCanvas.getContext('2d');
+    // จุดข้อมูล Spiral
+    for(let i=0; i<60; i++) {
+        let r = i/60 * 0.8 + 0.1, t = 1.3 * i/60 * 2 * Math.PI;
+        drawDot((r*Math.sin(t)+1)*150, (r*Math.cos(t)+1)*150, '#2563eb');
+        drawDot((r*Math.sin(t+Math.PI)+1)*150, (r*Math.cos(t+Math.PI)+1)*150, '#ef4444');
+    }
+}
 
-        let isTraining = false;
-        let epoch = 0;
-        let lossHistory = [];
-        let hiddenUnits = 14;
-        let learningRate = 0.28;
+function drawDot(x, y, color) {
+    bCtx.beginPath(); bCtx.arc(x, y, 4, 0, Math.PI*2);
+    bCtx.fillStyle = color; bCtx.fill();
+    bCtx.strokeStyle = '#fff'; bCtx.stroke();
+}
 
-        // Generate Spiral Points
-        function generateData() {
-            let points = [];
-            for (let i = 0; i < 50; i++) {
-                let r = i / 50 * 0.8 + 0.1;
-                let t = 1.25 * i / 50 * 2 * Math.PI;
-                // Class 0 (Blue)
-                points.push({x: r * Math.sin(t), y: r * Math.cos(t), label: 0});
-                // Class 1 (Red)
-                points.push({x: r * Math.sin(t + Math.PI), y: r * Math.cos(t + Math.PI), label: 1});
-            }
-            return points;
-        }
-        const dataset = generateData();
+function drawLoss() {
+    lCtx.clearRect(0,0,300,140);
+    lCtx.strokeStyle = '#ccc'; lCtx.beginPath(); lCtx.moveTo(0,130); lCtx.lineTo(300,130); lCtx.stroke();
+    if(lossHist.length < 2) return;
+    lCtx.beginPath(); lCtx.strokeStyle = '#ef4444'; lCtx.lineWidth = 2;
+    lossHist.forEach((l, i) => {
+        let x = (i/250)*300, y = 130 - (l*220);
+        i === 0 ? lCtx.moveTo(x,y) : lCtx.lineTo(x,y);
+    });
+    lCtx.stroke();
+}
 
-        function updateUnits(val) {
-            hiddenUnits = parseInt(val);
-            document.getElementById('unitsVal').innerText = val;
-            drawNetwork();
-        }
+function drawNet() {
+    nCtx.clearRect(0,0,300,130);
+    let u = parseInt(document.getElementById('units').value);
+    let count = Math.min(u, 8);
+    for(let i=0; i<count; i++) {
+        let hy = 15 + i*(100/count);
+        nCtx.beginPath(); nCtx.arc(150, hy, 4, 0, Math.PI*2); nCtx.fillStyle='#64748b'; nCtx.fill();
+        [35, 95].forEach(iy => { nCtx.beginPath(); nCtx.moveTo(30, iy); nCtx.lineTo(150, hy); nCtx.strokeStyle='#eee'; nCtx.stroke(); });
+        nCtx.beginPath(); nCtx.moveTo(150, hy); nCtx.lineTo(270, 65); nCtx.strokeStyle='#eee'; nCtx.stroke();
+    }
+    [35, 95].forEach(y => { nCtx.beginPath(); nCtx.arc(30, y, 6, 0, Math.PI*2); nCtx.fillStyle='#2563eb'; nCtx.fill(); });
+    nCtx.beginPath(); nCtx.arc(270, 65, 6, 0, Math.PI*2); nCtx.fillStyle='#10b981'; nCtx.fill();
+}
 
-        function updateLR(val) {
-            learningRate = parseFloat(val);
-            document.getElementById('lrVal').innerText = val;
-        }
+function toggleTrain() {
+    isTraining = !isTraining;
+    document.getElementById('btnTrain').innerText = isTraining ? "หยุดเทรน" : "เริ่มเทรน";
+    if(isTraining) loop();
+}
 
-        function toggleTrain() {
-            isTraining = !isTraining;
-            document.getElementById('btnTrain').innerText = isTraining ? "หยุดเทรน" : "เริ่มเทรน";
-            if (isTraining) trainLoop();
-        }
+function resetSim() {
+    isTraining = false; epoch = 0; lossHist = [];
+    document.getElementById('btnTrain').innerText = "เริ่มเทรน";
+    document.getElementById('ep').innerText = "0";
+    document.getElementById('ls').innerText = "0.5000";
+    drawBoundary(); drawLoss();
+}
 
-        function resetWeights() {
-            epoch = 0;
-            lossHistory = [];
-            document.getElementById('epochTxt').innerText = "0";
-            document.getElementById('lossTxt').innerText = "0.5000";
-            drawBoundary();
-            drawLoss();
-        }
+function loop() {
+    if(!isTraining) return;
+    epoch++;
+    let l = Math.max(0.01, 0.5 * Math.exp(-epoch/70) + Math.random()*0.005);
+    lossHist.push(l);
+    document.getElementById('ep').innerText = epoch;
+    document.getElementById('ls').innerText = l.toFixed(4);
+    drawBoundary(); drawLoss();
+    if(epoch < 250) requestAnimationFrame(loop);
+    else toggleTrain();
+}
 
-        function drawBoundary() {
-            let imgData = bCtx.createImageData(280, 280);
-            let progress = Math.min(1, epoch / 300);
+drawBoundary(); drawLoss(); drawNet();
+</script>
 
-            for (let x = 0; x < 280; x++) {
-                for (let y = 0; y < 280; y++) {
-                    let nx = (x / 140) - 1;
-                    let ny = (y / 140) - 1;
-                    
-                    // Simulated Spiral Decision Boundary Math
-                    let dist = Math.sqrt(nx*nx + ny*ny);
-                    let angle = Math.atan2(ny, nx);
-                    let val = Math.sin(angle * 2 - dist * 5 * progress);
-
-                    let index = (x + y * 280) * 4;
-                    if (val > 0) {
-                        imgData.data[index] = 239;     // R
-                        imgData.data[index+1] = 68;   // G
-                        imgData.data[index+2] = 68;   // B
-                        imgData.data[index+3] = 100;  // Alpha
-                    } else {
-                        imgData.data[index] = 37;     // R
-                        imgData.data[index+1] = 99;   // G
-                        imgData.data[index+2] = 235;  // B
-                        imgData.data[index+3] = 100;  // Alpha
-                    }
-                }
-            }
-            bCtx.putImageData(imgData, 0, 0);
-
-            // Draw Dataset Points
-            dataset.forEach(p => {
-                let px = (p.x + 1) * 140;
-                let py = (p.y + 1) * 140;
-                bCtx.beginPath();
-                bCtx.arc(px, py, 4, 0, Math.PI * 2);
-                bCtx.fillStyle = p.label === 1 ? '#ef4444' : '#2563eb';
-                bCtx.fill();
-                bCtx.strokeStyle = '#ffffff';
-                bCtx.stroke();
-            });
-        }
-
-        function drawLoss() {
-            lCtx.clearRect(0, 0, 280, 130);
-            lCtx.strokeStyle = '#cbd5e1';
-            lCtx.beginPath();
-            lCtx.moveTo(0, 120); lCtx.lineTo(280, 120);
-            lCtx.stroke();
-
-            if (lossHistory.length < 2) return;
-
-            lCtx.beginPath();
-            lCtx.strokeStyle = '#ef4444';
-            lCtx.lineWidth = 2;
-            lossHistory.forEach((l, i) => {
-                let x = (i / 300) * 280;
-                let y = 120 - (l * 200);
-                if (i === 0) lCtx.moveTo(x, y);
-                else lCtx.lineTo(x, y);
-            });
-            lCtx.stroke();
-        }
-
-        function drawNetwork() {
-            nCtx.clearRect(0, 0, 280, 130);
-            
-            // Draw Inputs (2)
-            [35, 95].forEach(y => {
-                nCtx.beginPath(); nCtx.arc(30, y, 6, 0, Math.PI*2);
-                nCtx.fillStyle = '#2563eb'; nCtx.fill();
-            });
-
-            // Draw Hidden Nodes (Simulated max 8 displayed)
-            let displayUnits = Math.min(hiddenUnits, 8);
-            for(let i=0; i<displayUnits; i++) {
-                let hy = 15 + i * (100 / displayUnits);
-                nCtx.beginPath(); nCtx.arc(140, hy, 5, 0, Math.PI*2);
-                nCtx.fillStyle = '#64748b'; nCtx.fill();
-
-                // Lines from input
-                [35, 95].forEach(iy => {
-                    nCtx.beginPath(); nCtx.moveTo(30, iy); nCtx.lineTo(140, hy);
-                    nCtx.strokeStyle = 'rgba(148, 163, 184, 0.3)'; nCtx.stroke();
-                });
-                
-                // Line to output
-                nCtx.beginPath(); nCtx.moveTo(140, hy); nCtx.lineTo(250, 65);
-                nCtx.strokeStyle = 'rgba(148, 163, 184, 0.3)'; nCtx.stroke();
-            }
-
-            // Draw Output (1)
-            nCtx.beginPath(); nCtx.arc(250, 65, 6, 0, Math.PI*2);
-            nCtx.fillStyle = '#10b981'; nCtx.fill();
-        }
-
-        function trainLoop() {
-            if (!isTraining) return;
-
-            epoch += 1;
-            let currentLoss = Math.max(0.01, 0.5 * Math.exp(-epoch / 80) + (Math.random() * 0.01));
-            lossHistory.push(currentLoss);
-
-            document.getElementById('epochTxt').innerText = epoch;
-            document.getElementById('lossTxt').innerText = currentLoss.toFixed(4);
-
-            drawBoundary();
-            drawLoss();
-
-            if (epoch < 300) {
-                requestAnimationFrame(trainLoop);
-            } else {
-                isTraining = false;
-                document.getElementById('btnTrain').innerText = "เริ่มเทรน";
-            }
-        }
-
-        // Initial Setup
-        drawBoundary();
-        drawLoss();
-        drawNetwork();
-    </script>
 </body>
 </html>
