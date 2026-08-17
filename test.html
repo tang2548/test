@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML Visualizer & Interactive Playground</title>
+    <title>ML Visualizer</title>
     <style>
         :root {
             --primary: #2563eb;
-            --primary-hover: #1d4ed8;
             --bg: #f8fafc;
             --sidebar-bg: #ffffff;
             --text: #1e293b;
@@ -24,9 +23,9 @@
             overflow: hidden;
         }
 
-        /* Sidebar Navigation */
+        /* Sidebar */
         .sidebar {
-            width: 260px;
+            width: 250px;
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border);
             display: flex;
@@ -63,7 +62,7 @@
             border-left: 4px solid var(--primary);
         }
 
-        /* Main Content Area */
+        /* Main Content */
         .main-content {
             flex-grow: 1;
             padding: 24px;
@@ -72,9 +71,9 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* MLP Playground Layout */
+        /* MLP Playground */
         .playground-title { margin-top: 0; color: #0f172a; }
-        .playground-desc { color: #475569; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+        .playground-desc { color: #475569; font-size: 0.9rem; margin-bottom: 20px; }
         
         .viz-grid {
             display: grid;
@@ -84,7 +83,6 @@
             padding: 20px;
             border-radius: 12px;
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
         .canvas-box {
             display: flex;
@@ -98,7 +96,7 @@
             background: #fafafa;
         }
 
-        /* Controls Panel */
+        /* Controls */
         .controls-panel {
             grid-column: span 2;
             background: #f1f5f9;
@@ -119,7 +117,7 @@
             cursor: pointer;
             font-size: 0.85rem;
         }
-        .btn:hover { background: var(--primary-hover); }
+        .btn:hover { background: #1d4ed8; }
         .btn-outline {
             background: transparent;
             color: #334155;
@@ -200,7 +198,7 @@
     <!-- Main Content Area -->
     <div class="main-content">
 
-        <!-- 08. MLP Neural Net (Active Default Page) -->
+        <!-- 08. MLP Neural Net Page -->
         <div id="mlp" class="tab-content active">
             <h2 class="playground-title">08. MLP Neural Net (Multi-Layer Perceptron)</h2>
             <p class="playground-desc">
@@ -208,20 +206,17 @@
             </p>
 
             <div class="viz-grid">
-                <!-- Left: Decision Boundary -->
                 <div class="canvas-box">
                     <h4>ซ้าย = decision boundary</h4>
                     <canvas id="bCanvas" width="280" height="280"></canvas>
                 </div>
 
-                <!-- Right: Neural Network Structure & Loss -->
                 <div class="canvas-box">
                     <h4>กลาง = โครงข่าย • ขวา = loss</h4>
                     <canvas id="nCanvas" width="280" height="130"></canvas>
                     <canvas id="lCanvas" width="280" height="130" style="margin-top:20px;"></canvas>
                 </div>
 
-                <!-- Controls -->
                 <div class="controls-panel">
                     <button class="btn" id="btnTrain" onclick="toggleTrain()">เริ่ม / หยุดเทรน</button>
                     <button class="btn btn-outline" onclick="resetWeights()">รีเซ็ตน้ำหนัก</button>
@@ -262,113 +257,101 @@
             </div>
         </div>
 
-        <!-- 01. Linear Regression -->
+        <!-- Other Models Pages -->
         <div id="m1" class="tab-content">
             <div class="model-card">
                 <h2>01. Linear Regression</h2>
-                <p>สร้างเส้นตรงหาความสัมพันธ์ระหว่างตัวแปรเพื่อทำนายค่านวนต่อเนื่อง (Continuous Value)</p>
+                <p>สร้างเส้นตรงหาความสัมพันธ์ระหว่างตัวแปรเพื่อทำนายค่าเชิงตัวเลขแบบต่อเนื่อง</p>
             </div>
         </div>
 
-        <!-- 02. Logistic Regression -->
         <div id="m2" class="tab-content">
             <div class="model-card">
                 <h2>02. Logistic Regression</h2>
-                <p>จำแนกกลุ่มข้อมูลแบบ 2 คลาส (Binary Classification) ด้วย Sigmoid Curve</p>
+                <p>จำแนกกลุ่มข้อมูลแบบ 2 คลาส (Binary Classification) ด้วย Sigmoid Function</p>
             </div>
         </div>
 
-        <!-- 03. k-NN -->
         <div id="m3" class="tab-content">
             <div class="model-card">
                 <h2>03. k-Nearest Neighbors</h2>
-                <p>จำแนกกลุ่มตามเพื่อนบ้านที่ใกล้ที่สุด k อันดับแรก</p>
+                <p>จำแนกกลุ่มข้อมูลตามระยะห่างของเพื่อนบ้านใกล้ที่สุด k อันดับแรก</p>
             </div>
         </div>
 
-        <!-- 04. Decision Tree -->
         <div id="m4" class="tab-content">
             <div class="model-card">
                 <h2>04. Decision Tree</h2>
-                <p>สร้างเงื่อนไขแผนผังต้นไม้เพื่อแยกข้อมูลตามค่า Entropy / Gini Impurity</p>
+                <p>สร้างแผนผังต้นไม้การตัดสินใจเพื่อแยกข้อมูลตามค่า Information Gain / Gini</p>
             </div>
         </div>
 
-        <!-- 05. Random Forest -->
         <div id="m5" class="tab-content">
             <div class="model-card">
                 <h2>05. Random Forest</h2>
-                <p>รวบรวม Decision Tree จำนวนมากร่วมกันโหวตคำตอบเพื่อลด Overfitting</p>
+                <p>สร้าง Decision Tree หลายๆ ต้นแล้วนำคำตอบมาทำ Ensemble Voting</p>
             </div>
         </div>
 
-        <!-- 06. SVM -->
         <div id="m6" class="tab-content">
             <div class="model-card">
                 <h2>06. Support Vector Machine (SVM)</h2>
-                <p>หาเส้นหรือระนาบ Hyperplane ที่แบ่งกลุ่มข้อมูลให้มีระยะ Margin กว้างที่สุด</p>
+                <p>หาเส้นแบ่ง Hyperplane ที่ให้ระยะห่าง Margin กว้างที่สุด</p>
             </div>
         </div>
 
-        <!-- 07. K-Means -->
         <div id="m7" class="tab-content">
             <div class="model-card">
                 <h2>07. K-Means Clustering</h2>
-                <p>การจัดกลุ่มแบบ Unsupervised Learning โดยหาจุดศูนย์กลาง Centroid</p>
+                <p>การจัดกลุ่มข้อมูลแบบ Unsupervised Learning โดยใช้จุดศูนย์กลาง Centroid</p>
             </div>
         </div>
 
-        <!-- 09. CNN -->
         <div id="m9" class="tab-content">
             <div class="model-card">
                 <h2>09. Convolutional Neural Network (CNN)</h2>
-                <p>สกัดฟีเจอร์ของรูปภาพด้วย Filter/Kernel เพื่อการจำแนกภาพ</p>
+                <p>สกัดฟีเจอร์ของรูปภาพด้วย Kernel Filter สำหรับงานประมวลผลภาพ</p>
             </div>
         </div>
 
-        <!-- 10. LSTM -->
         <div id="m10" class="tab-content">
             <div class="model-card">
                 <h2>10. Long Short-Term Memory (LSTM)</h2>
-                <p>โครงข่ายจดจำข้อมูลอนุกรมเวลา (Time-series) และลำดับประโยค</p>
+                <p>โครงข่ายประสาทสำหรับการประมวลผลข้อมูลลำดับเวลา (Time-series) และข้อความ</p>
             </div>
         </div>
 
-        <!-- 11. Transformer -->
         <div id="m11" class="tab-content">
             <div class="model-card">
                 <h2>11. Transformer</h2>
-                <p>สถาปัตยกรรมประมวลผลภาษา (NLP) ด้วยกลไก Self-Attention</p>
+                <p>สถาปัตยกรรมหลักของงาน NLP ที่ใช้กลไก Self-Attention ในการประมวลผล</p>
             </div>
         </div>
 
-        <!-- 12. Q-Learning -->
         <div id="m12" class="tab-content">
             <div class="model-card">
                 <h2>12. Q-Learning</h2>
-                <p>การเรียนรู้แบบเสริมกำลัง (Reinforcement Learning) ผ่าน Q-Table reward</p>
+                <p>การเรียนรู้แบบ Reinforcement Learning ผ่านการอัปเดต Q-Table</p>
             </div>
         </div>
 
-        <!-- 13. XGBoost -->
         <div id="m13" class="tab-content">
             <div class="model-card">
                 <h2>13. XGBoost</h2>
-                <p>Gradient Boosting Framework ประสิทธิภาพสูงสำหรับข้อมูลแบบตาราง</p>
+                <p>Gradient Boosting Tree ที่มีประสิทธิภาพสูงสำหรับข้อมูล Tabular Data</p>
             </div>
         </div>
 
-        <!-- 14. Stacking -->
         <div id="m14" class="tab-content">
             <div class="model-card">
-                <h2>14. Stacking Ensemble</h2>
-                <p>นำผลทำนายจากหลายๆ โมเดลส่งให้ Meta-Model ทำนายผลสรุปขั้นสุดท้าย</p>
+                <h2>14. Stacking</h2>
+                <p>รวมผลลัพธ์ของหลายโมเดลส่งต่อให้ Meta-Learner ทำนายผลลัพธ์สุดท้าย</p>
             </div>
         </div>
 
     </div>
 
-    <!-- Script Operations -->
+    <!-- Script Area -->
     <script>
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -377,10 +360,12 @@
             element.classList.add('active');
         }
 
-        // Canvas Simulation Logic
-        const bCtx = document.getElementById('bCanvas').getContext('2d');
-        const lCtx = document.getElementById('lCanvas').getContext('2d');
-        const nCtx = document.getElementById('nCanvas').getContext('2d');
+        const bCanvas = document.getElementById('bCanvas');
+        const bCtx = bCanvas.getContext('2d');
+        const lCanvas = document.getElementById('lCanvas');
+        const lCtx = lCanvas.getContext('2d');
+        const nCanvas = document.getElementById('nCanvas');
+        const nCtx = nCanvas.getContext('2d');
 
         let isTraining = false;
         let epoch = 0;
@@ -428,15 +413,21 @@
                     let val = Math.sin(angle * 2 - dist * 5 * p);
 
                     let idx = (x + y * 280) * 4;
-                    imgData.data[idx] = val > 0 ? 240 : 100;
-                    imgData.data[idx+1] = val > 0 ? 150 : 180;
-                    imgData.data[idx+2] = val > 0 = 170 : 220;
-                    imgData.data[idx+3] = 120;
+                    if (val > 0) {
+                        imgData.data[idx] = 240;
+                        imgData.data[idx+1] = 150;
+                        imgData.data[idx+2] = 170;
+                        imgData.data[idx+3] = 120;
+                    } else {
+                        imgData.data[idx] = 100;
+                        imgData.data[idx+1] = 180;
+                        imgData.data[idx+2] = 220;
+                        imgData.data[idx+3] = 120;
+                    }
                 }
             }
             bCtx.putImageData(imgData, 0, 0);
 
-            // Spiral Points
             for(let i = 0; i < 45; i++) {
                 let r = i / 45 * 0.75 + 0.1;
                 let t = 1.25 * i / 45 * 2 * Math.PI;
@@ -520,7 +511,7 @@
             }
         }
 
-        // Init Setup
+        // Run Initialization
         drawBoundary();
         drawLoss();
         drawNetwork();
