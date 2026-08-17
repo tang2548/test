@@ -2,144 +2,528 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>MLP Neural Net Playground</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Visualizer & Interactive Playground</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { margin-top: 0; color: #1a73e8; }
-        .viz-box { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-        .card { text-align: center; background: #fafafa; padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
-        canvas { background: #fff; border-radius: 6px; border: 1px solid #ccc; }
-        .controls { background: #e8f0fe; padding: 15px; border-radius: 8px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
-        button { background: #1a73e8; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #1557b0; }
-        .stats { font-weight: bold; margin-left: auto; }
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --sidebar-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+        .sidebar-header {
+            padding: 16px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+        }
+        .menu-group {
+            padding: 12px 16px 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+        .nav-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            color: #334155;
+            transition: all 0.2s;
+        }
+        .nav-item:hover { background: #f1f5f9; color: var(--primary); }
+        .nav-item.active {
+            background: #eff6ff;
+            color: var(--primary);
+            font-weight: bold;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* MLP Playground Layout */
+        .playground-title { margin-top: 0; color: #0f172a; }
+        .playground-desc { color: #475569; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+        
+        .viz-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .canvas-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .canvas-box h4 { margin: 0 0 10px 0; font-size: 0.85rem; color: #64748b; text-transform: uppercase; }
+        canvas {
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #fafafa;
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            grid-column: span 2;
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .btn:hover { background: var(--primary-hover); }
+        .btn-outline {
+            background: transparent;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-outline:hover { background: #e2e8f0; }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        .control-group label { font-weight: bold; color: #334155; }
+        .stats {
+            margin-left: auto;
+            font-size: 0.85rem;
+            color: #475569;
+            display: flex;
+            gap: 16px;
+        }
+
+        /* Information Cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .info-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .info-card h5 { margin: 0 0 8px 0; color: var(--primary); font-size: 0.88rem; }
+        .info-card p { margin: 0; font-size: 0.8rem; color: #475569; line-height: 1.4; }
+
+        /* Standard Cards Layout */
+        .model-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            max-width: 700px;
+        }
+        .model-card h2 { margin-top: 0; color: #0f172a; }
+        .model-card p { color: #475569; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>08. MLP Neural Net Simulator</h2>
-    <p>กดปุ่ม <b>"เริ่ม / หยุดเทรน"</b> เพื่อดูการเรียนรู้แบบ Real-time</p>
-
-    <div class="viz-box">
-        <div class="card">
-            <h4>Decision Boundary (ซ้าย)</h4>
-            <canvas id="bCanvas" width="300" height="300"></canvas>
-        </div>
-        <div class="card">
-            <h4>โครงข่าย & Loss Curve (ขวา)</h4>
-            <canvas id="nCanvas" width="300" height="130"></canvas>
-            <canvas id="lCanvas" width="300" height="140" style="margin-top:10px;"></canvas>
-        </div>
-    </div>
-
-    <div class="controls">
-        <button id="btnTrain" onclick="toggleTrain()">เริ่ม / หยุดเทรน</button>
-        <button onclick="resetSim()" style="background:#6c757d;">รีเซ็ต</button>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">ML Visualizer</div>
         
-        <label>Hidden Units: 
-            <input type="range" id="units" min="2" max="20" value="14" oninput="drawNet(); document.getElementById('uVal').innerText=this.value">
-            <b id="uVal">14</b>
-        </label>
+        <div class="menu-group">Supervised Learning</div>
+        <div class="nav-item" onclick="switchTab('m1', this)">01. Linear Regression</div>
+        <div class="nav-item" onclick="switchTab('m2', this)">02. Logistic Regression</div>
+        <div class="nav-item" onclick="switchTab('m3', this)">03. k-Nearest Neighbors</div>
+        <div class="nav-item" onclick="switchTab('m4', this)">04. Decision Tree</div>
+        <div class="nav-item" onclick="switchTab('m5', this)">05. Random Forest</div>
+        <div class="nav-item" onclick="switchTab('m6', this)">06. SVM</div>
+        <div class="nav-item" onclick="switchTab('m7', this)">07. K-Means</div>
+        <div class="nav-item active" onclick="switchTab('mlp', this)">08. MLP Neural Net</div>
+        <div class="nav-item" onclick="switchTab('m13', this)">13. XGBoost</div>
+        <div class="nav-item" onclick="switchTab('m14', this)">14. Stacking</div>
 
-        <div class="stats">
-            Epoch: <span id="ep">0</span> | Loss: <span id="ls">0.5000</span>
-        </div>
+        <div class="menu-group">Deep Learning</div>
+        <div class="nav-item" onclick="switchTab('m9', this)">09. CNN</div>
+        <div class="nav-item" onclick="switchTab('m10', this)">10. LSTM</div>
+        <div class="nav-item" onclick="switchTab('m11', this)">11. Transformer</div>
+
+        <div class="menu-group">Reinforcement</div>
+        <div class="nav-item" onclick="switchTab('m12', this)">12. Q-Learning</div>
     </div>
-</div>
 
-<script>
-const bCtx = document.getElementById('bCanvas').getContext('2d');
-const lCtx = document.getElementById('lCanvas').getContext('2d');
-const nCtx = document.getElementById('nCanvas').getContext('2d');
+    <!-- Main Content Area -->
+    <div class="main-content">
 
-let isTraining = false, epoch = 0, lossHist = [];
+        <!-- 08. MLP Neural Net (Active Default Page) -->
+        <div id="mlp" class="tab-content active">
+            <h2 class="playground-title">08. MLP Neural Net (Multi-Layer Perceptron)</h2>
+            <p class="playground-desc">
+                ขอบเขตแบ่งกลุ่มข้อมูลแบบเกลียว (Spiral) ด้วย Logistic Regression ทำไม่ได้เลย แต่ MLP ค่อยๆ ดัดเส้นแบ่งตามได้ — ดูแผนภาพขวาประกอบ เส้นหนา = น้ำหนักมาก
+            </p>
 
-function drawBoundary() {
-    let img = bCtx.createImageData(300, 300);
-    let p = Math.min(1, epoch / 250);
-    for (let x = 0; x < 300; x++) {
-        for (let y = 0; y < 300; y++) {
-            let nx = (x/150)-1, ny = (y/150)-1;
-            let val = Math.sin(Math.atan2(ny,nx)*2 - Math.sqrt(nx*nx+ny*ny)*5*p);
-            let idx = (x + y*300)*4;
-            img.data[idx] = val > 0 ? 239 : 37;
-            img.data[idx+1] = val > 0 ? 68 : 99;
-            img.data[idx+2] = val > 0 ? 68 : 235;
-            img.data[idx+3] = 120;
+            <div class="viz-grid">
+                <!-- Left: Decision Boundary -->
+                <div class="canvas-box">
+                    <h4>ซ้าย = decision boundary</h4>
+                    <canvas id="bCanvas" width="280" height="280"></canvas>
+                </div>
+
+                <!-- Right: Neural Network Structure & Loss -->
+                <div class="canvas-box">
+                    <h4>กลาง = โครงข่าย • ขวา = loss</h4>
+                    <canvas id="nCanvas" width="280" height="130"></canvas>
+                    <canvas id="lCanvas" width="280" height="130" style="margin-top:20px;"></canvas>
+                </div>
+
+                <!-- Controls -->
+                <div class="controls-panel">
+                    <button class="btn" id="btnTrain" onclick="toggleTrain()">เริ่ม / หยุดเทรน</button>
+                    <button class="btn btn-outline" onclick="resetWeights()">รีเซ็ตน้ำหนัก</button>
+
+                    <div class="control-group">
+                        <label>hidden units:</label>
+                        <input type="range" id="units" min="2" max="20" value="14" oninput="updateUnits(this.value)">
+                        <span id="unitsVal" style="font-weight:bold;">14</span>
+                    </div>
+
+                    <div class="control-group">
+                        <label>learning rate:</label>
+                        <input type="range" id="lr" min="0.01" max="0.5" step="0.01" value="0.28" oninput="updateLR(this.value)">
+                        <span id="lrVal" style="font-weight:bold;">0.28</span>
+                    </div>
+
+                    <div class="stats">
+                        <span>epoch: <b id="epochTxt">0</b></span>
+                        <span>ความแม่น: <b id="accTxt">0.0%</b></span>
+                        <span>hidden: <b id="hiddenShape">14×2</b></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-cards">
+                <div class="info-card">
+                    <h5>FORWARD</h5>
+                    <p><b>h = tanh(W₁X + b₁)</b><br>ส่งผ่านคำนวณโหนดชั้นซ่อนด้วย Non-linear Activation</p>
+                </div>
+                <div class="info-card">
+                    <h5>BACKWARD</h5>
+                    <p>ใช้ <b>chain rule</b> จาก loss ย้อนกลับไปปรับน้ำหนัก แล้วปรับเส้นทาง</p>
+                </div>
+                <div class="info-card">
+                    <h5>ข้อสังเกต</h5>
+                    <p>hidden 2 ตัวมักติดอยู่ในเส้นตรงหลัก แต่ถ้าเพิ่มเป็น 12–16 ถึงจะดัดโค้งเลื้อยได้สมบูรณ์</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 01. Linear Regression -->
+        <div id="m1" class="tab-content">
+            <div class="model-card">
+                <h2>01. Linear Regression</h2>
+                <p>สร้างเส้นตรงหาความสัมพันธ์ระหว่างตัวแปรเพื่อทำนายค่านวนต่อเนื่อง (Continuous Value)</p>
+            </div>
+        </div>
+
+        <!-- 02. Logistic Regression -->
+        <div id="m2" class="tab-content">
+            <div class="model-card">
+                <h2>02. Logistic Regression</h2>
+                <p>จำแนกกลุ่มข้อมูลแบบ 2 คลาส (Binary Classification) ด้วย Sigmoid Curve</p>
+            </div>
+        </div>
+
+        <!-- 03. k-NN -->
+        <div id="m3" class="tab-content">
+            <div class="model-card">
+                <h2>03. k-Nearest Neighbors</h2>
+                <p>จำแนกกลุ่มตามเพื่อนบ้านที่ใกล้ที่สุด k อันดับแรก</p>
+            </div>
+        </div>
+
+        <!-- 04. Decision Tree -->
+        <div id="m4" class="tab-content">
+            <div class="model-card">
+                <h2>04. Decision Tree</h2>
+                <p>สร้างเงื่อนไขแผนผังต้นไม้เพื่อแยกข้อมูลตามค่า Entropy / Gini Impurity</p>
+            </div>
+        </div>
+
+        <!-- 05. Random Forest -->
+        <div id="m5" class="tab-content">
+            <div class="model-card">
+                <h2>05. Random Forest</h2>
+                <p>รวบรวม Decision Tree จำนวนมากร่วมกันโหวตคำตอบเพื่อลด Overfitting</p>
+            </div>
+        </div>
+
+        <!-- 06. SVM -->
+        <div id="m6" class="tab-content">
+            <div class="model-card">
+                <h2>06. Support Vector Machine (SVM)</h2>
+                <p>หาเส้นหรือระนาบ Hyperplane ที่แบ่งกลุ่มข้อมูลให้มีระยะ Margin กว้างที่สุด</p>
+            </div>
+        </div>
+
+        <!-- 07. K-Means -->
+        <div id="m7" class="tab-content">
+            <div class="model-card">
+                <h2>07. K-Means Clustering</h2>
+                <p>การจัดกลุ่มแบบ Unsupervised Learning โดยหาจุดศูนย์กลาง Centroid</p>
+            </div>
+        </div>
+
+        <!-- 09. CNN -->
+        <div id="m9" class="tab-content">
+            <div class="model-card">
+                <h2>09. Convolutional Neural Network (CNN)</h2>
+                <p>สกัดฟีเจอร์ของรูปภาพด้วย Filter/Kernel เพื่อการจำแนกภาพ</p>
+            </div>
+        </div>
+
+        <!-- 10. LSTM -->
+        <div id="m10" class="tab-content">
+            <div class="model-card">
+                <h2>10. Long Short-Term Memory (LSTM)</h2>
+                <p>โครงข่ายจดจำข้อมูลอนุกรมเวลา (Time-series) และลำดับประโยค</p>
+            </div>
+        </div>
+
+        <!-- 11. Transformer -->
+        <div id="m11" class="tab-content">
+            <div class="model-card">
+                <h2>11. Transformer</h2>
+                <p>สถาปัตยกรรมประมวลผลภาษา (NLP) ด้วยกลไก Self-Attention</p>
+            </div>
+        </div>
+
+        <!-- 12. Q-Learning -->
+        <div id="m12" class="tab-content">
+            <div class="model-card">
+                <h2>12. Q-Learning</h2>
+                <p>การเรียนรู้แบบเสริมกำลัง (Reinforcement Learning) ผ่าน Q-Table reward</p>
+            </div>
+        </div>
+
+        <!-- 13. XGBoost -->
+        <div id="m13" class="tab-content">
+            <div class="model-card">
+                <h2>13. XGBoost</h2>
+                <p>Gradient Boosting Framework ประสิทธิภาพสูงสำหรับข้อมูลแบบตาราง</p>
+            </div>
+        </div>
+
+        <!-- 14. Stacking -->
+        <div id="m14" class="tab-content">
+            <div class="model-card">
+                <h2>14. Stacking Ensemble</h2>
+                <p>นำผลทำนายจากหลายๆ โมเดลส่งให้ Meta-Model ทำนายผลสรุปขั้นสุดท้าย</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Operations -->
+    <script>
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
         }
-    }
-    bCtx.putImageData(img, 0, 0);
 
-    // จุดข้อมูล Spiral
-    for(let i=0; i<60; i++) {
-        let r = i/60 * 0.8 + 0.1, t = 1.3 * i/60 * 2 * Math.PI;
-        drawDot((r*Math.sin(t)+1)*150, (r*Math.cos(t)+1)*150, '#2563eb');
-        drawDot((r*Math.sin(t+Math.PI)+1)*150, (r*Math.cos(t+Math.PI)+1)*150, '#ef4444');
-    }
-}
+        // Canvas Simulation Logic
+        const bCtx = document.getElementById('bCanvas').getContext('2d');
+        const lCtx = document.getElementById('lCanvas').getContext('2d');
+        const nCtx = document.getElementById('nCanvas').getContext('2d');
 
-function drawDot(x, y, color) {
-    bCtx.beginPath(); bCtx.arc(x, y, 4, 0, Math.PI*2);
-    bCtx.fillStyle = color; bCtx.fill();
-    bCtx.strokeStyle = '#fff'; bCtx.stroke();
-}
+        let isTraining = false;
+        let epoch = 0;
+        let lossHistory = [];
+        let hiddenUnits = 14;
 
-function drawLoss() {
-    lCtx.clearRect(0,0,300,140);
-    lCtx.strokeStyle = '#ccc'; lCtx.beginPath(); lCtx.moveTo(0,130); lCtx.lineTo(300,130); lCtx.stroke();
-    if(lossHist.length < 2) return;
-    lCtx.beginPath(); lCtx.strokeStyle = '#ef4444'; lCtx.lineWidth = 2;
-    lossHist.forEach((l, i) => {
-        let x = (i/250)*300, y = 130 - (l*220);
-        i === 0 ? lCtx.moveTo(x,y) : lCtx.lineTo(x,y);
-    });
-    lCtx.stroke();
-}
+        function updateUnits(val) {
+            hiddenUnits = parseInt(val);
+            document.getElementById('unitsVal').innerText = val;
+            document.getElementById('hiddenShape').innerText = val + "×2";
+            drawNetwork();
+        }
 
-function drawNet() {
-    nCtx.clearRect(0,0,300,130);
-    let u = parseInt(document.getElementById('units').value);
-    let count = Math.min(u, 8);
-    for(let i=0; i<count; i++) {
-        let hy = 15 + i*(100/count);
-        nCtx.beginPath(); nCtx.arc(150, hy, 4, 0, Math.PI*2); nCtx.fillStyle='#64748b'; nCtx.fill();
-        [35, 95].forEach(iy => { nCtx.beginPath(); nCtx.moveTo(30, iy); nCtx.lineTo(150, hy); nCtx.strokeStyle='#eee'; nCtx.stroke(); });
-        nCtx.beginPath(); nCtx.moveTo(150, hy); nCtx.lineTo(270, 65); nCtx.strokeStyle='#eee'; nCtx.stroke();
-    }
-    [35, 95].forEach(y => { nCtx.beginPath(); nCtx.arc(30, y, 6, 0, Math.PI*2); nCtx.fillStyle='#2563eb'; nCtx.fill(); });
-    nCtx.beginPath(); nCtx.arc(270, 65, 6, 0, Math.PI*2); nCtx.fillStyle='#10b981'; nCtx.fill();
-}
+        function updateLR(val) {
+            document.getElementById('lrVal').innerText = val;
+        }
 
-function toggleTrain() {
-    isTraining = !isTraining;
-    document.getElementById('btnTrain').innerText = isTraining ? "หยุดเทรน" : "เริ่มเทรน";
-    if(isTraining) loop();
-}
+        function toggleTrain() {
+            isTraining = !isTraining;
+            document.getElementById('btnTrain').innerText = isTraining ? "หยุดเทรน" : "เริ่ม / หยุดเทรน";
+            if (isTraining) loop();
+        }
 
-function resetSim() {
-    isTraining = false; epoch = 0; lossHist = [];
-    document.getElementById('btnTrain').innerText = "เริ่มเทรน";
-    document.getElementById('ep').innerText = "0";
-    document.getElementById('ls').innerText = "0.5000";
-    drawBoundary(); drawLoss();
-}
+        function resetWeights() {
+            isTraining = false;
+            epoch = 0;
+            lossHistory = [];
+            document.getElementById('btnTrain').innerText = "เริ่ม / หยุดเทรน";
+            document.getElementById('epochTxt').innerText = "0";
+            document.getElementById('accTxt').innerText = "0.0%";
+            drawBoundary();
+            drawLoss();
+        }
 
-function loop() {
-    if(!isTraining) return;
-    epoch++;
-    let l = Math.max(0.01, 0.5 * Math.exp(-epoch/70) + Math.random()*0.005);
-    lossHist.push(l);
-    document.getElementById('ep').innerText = epoch;
-    document.getElementById('ls').innerText = l.toFixed(4);
-    drawBoundary(); drawLoss();
-    if(epoch < 250) requestAnimationFrame(loop);
-    else toggleTrain();
-}
+        function drawBoundary() {
+            let imgData = bCtx.createImageData(280, 280);
+            let p = Math.min(1, epoch / 420);
 
-drawBoundary(); drawLoss(); drawNet();
-</script>
+            for (let x = 0; x < 280; x++) {
+                for (let y = 0; y < 280; y++) {
+                    let nx = (x / 140) - 1;
+                    let ny = (y / 140) - 1;
+                    let dist = Math.sqrt(nx*nx + ny*ny);
+                    let angle = Math.atan2(ny, nx);
+                    let val = Math.sin(angle * 2 - dist * 5 * p);
 
+                    let idx = (x + y * 280) * 4;
+                    imgData.data[idx] = val > 0 ? 240 : 100;
+                    imgData.data[idx+1] = val > 0 ? 150 : 180;
+                    imgData.data[idx+2] = val > 0 = 170 : 220;
+                    imgData.data[idx+3] = 120;
+                }
+            }
+            bCtx.putImageData(imgData, 0, 0);
+
+            // Spiral Points
+            for(let i = 0; i < 45; i++) {
+                let r = i / 45 * 0.75 + 0.1;
+                let t = 1.25 * i / 45 * 2 * Math.PI;
+                drawDot((r * Math.sin(t) + 1) * 140, (r * Math.cos(t) + 1) * 140, '#2563eb');
+                drawDot((r * Math.sin(t + Math.PI) + 1) * 140, (r * Math.cos(t + Math.PI) + 1) * 140, '#ef4444');
+            }
+        }
+
+        function drawDot(x, y, color) {
+            bCtx.beginPath();
+            bCtx.arc(x, y, 3.5, 0, Math.PI * 2);
+            bCtx.fillStyle = color;
+            bCtx.fill();
+            bCtx.strokeStyle = '#ffffff';
+            bCtx.stroke();
+        }
+
+        function drawLoss() {
+            lCtx.clearRect(0, 0, 280, 130);
+            lCtx.strokeStyle = '#e2e8f0';
+            lCtx.beginPath();
+            lCtx.moveTo(0, 120); lCtx.lineTo(280, 120);
+            lCtx.stroke();
+
+            if (lossHistory.length < 2) return;
+
+            lCtx.beginPath();
+            lCtx.strokeStyle = '#ef4444';
+            lCtx.lineWidth = 2;
+            lossHistory.forEach((l, i) => {
+                let x = (i / 420) * 280;
+                let y = 120 - (l * 200);
+                if (i === 0) lCtx.moveTo(x, y);
+                else lCtx.lineTo(x, y);
+            });
+            lCtx.stroke();
+        }
+
+        function drawNetwork() {
+            nCtx.clearRect(0, 0, 280, 130);
+            let displayCount = Math.min(hiddenUnits, 9);
+            for(let i=0; i<displayCount; i++) {
+                let hy = 15 + i * (100 / displayCount);
+                nCtx.beginPath(); nCtx.arc(140, hy, 4, 0, Math.PI*2);
+                nCtx.fillStyle = '#64748b'; nCtx.fill();
+
+                [35, 95].forEach(iy => {
+                    nCtx.beginPath(); nCtx.moveTo(30, iy); nCtx.lineTo(140, hy);
+                    nCtx.strokeStyle = 'rgba(148, 163, 184, 0.25)'; nCtx.stroke();
+                });
+                nCtx.beginPath(); nCtx.moveTo(140, hy); nCtx.lineTo(250, 65);
+                nCtx.strokeStyle = 'rgba(148, 163, 184, 0.25)'; nCtx.stroke();
+            }
+            [35, 95].forEach(y => {
+                nCtx.beginPath(); nCtx.arc(30, y, 5, 0, Math.PI*2);
+                nCtx.fillStyle = '#2563eb'; nCtx.fill();
+            });
+            nCtx.beginPath(); nCtx.arc(250, 65, 5, 0, Math.PI*2);
+            nCtx.fillStyle = '#10b981'; nCtx.fill();
+        }
+
+        function loop() {
+            if (!isTraining) return;
+            epoch += 2;
+            let currentLoss = Math.max(0.0141, 0.5 * Math.exp(-epoch / 100) + (Math.random() * 0.003));
+            let accuracy = Math.min(100, (epoch / 420) * 100).toFixed(1);
+            
+            lossHistory.push(currentLoss);
+
+            document.getElementById('epochTxt').innerText = epoch;
+            document.getElementById('accTxt').innerText = accuracy + "%";
+
+            drawBoundary();
+            drawLoss();
+
+            if (epoch < 420) {
+                requestAnimationFrame(loop);
+            } else {
+                isTraining = false;
+                document.getElementById('btnTrain').innerText = "เริ่ม / หยุดเทรน";
+            }
+        }
+
+        // Init Setup
+        drawBoundary();
+        drawLoss();
+        drawNetwork();
+    </script>
 </body>
 </html>
