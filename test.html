@@ -77,7 +77,6 @@
         svg { width: 100%; height: 100%; }
         p.desc { font-size: 0.85rem; color: #334155; margin-bottom: 12px; }
         
-        /* Tuning Box & Dynamic Controls */
         .tuning-box {
             background: var(--tuning-bg);
             border-left: 4px solid var(--primary);
@@ -90,9 +89,6 @@
             font-weight: bold;
             color: #0f172a;
             margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
         .param-list {
             margin: 0;
@@ -133,7 +129,6 @@
             font-size: 0.78rem;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
         }
         .btn-add:hover { background: var(--primary-hover); }
         .btn-delete {
@@ -148,7 +143,7 @@
 
     <header>
         <h1>ML Visualizer & Dynamic Parameter Tuning</h1>
-        <p>สามารถเพิ่ม/ลบ Hyperparameter ได้เองแบบ Real-time ในการ์ดแต่ละใบ</p>
+        <p>เพิ่ม/ลบ Hyperparameter ได้เองแบบ Real-time ในการ์ดแต่ละใบ</p>
     </header>
 
     <h2 class="section-title">1. Supervised Learning</h2>
@@ -238,7 +233,6 @@
     </div>
 
     <script>
-        // ฟังก์ชันเพิ่ม Parameter ใหม่เข้า List
         function addParam(button) {
             const form = button.parentElement;
             const nameInput = form.querySelector('.input-name');
@@ -258,12 +252,10 @@
             
             paramList.appendChild(li);
 
-            // เคลียร์ค่าในช่องพิมพ์
             nameInput.value = '';
             descInput.value = '';
         }
 
-        // ฟังก์ชันลบ Parameter
         function removeParam(span) {
             span.parentElement.remove();
         }
