@@ -1,319 +1,137 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Machine Learning Algorithms Visualizer</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .active-tab {
-            background-color: #3b82f6;
-            color: white;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machine Learning Algorithms Visualizer</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .active-tab {
+      background-color: #3b82f6;
+      color: white;
+    }
+  </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col md:flex-row">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-full md:w-72 bg-slate-800 border-r border-slate-700 p-4 overflow-y-auto">
-        <h1 class="text-xl font-bold text-blue-400 mb-6 flex items-center gap-2">
-            🤖 ML Visualizer
-        </h1>
+  <!-- Sidebar Navigation -->
+  <aside class="w-full md:w-72 bg-slate-800 border-r border-slate-700 p-4 overflow-y-auto">
+    <h1 class="text-xl font-bold text-blue-400 mb-6 flex items-center gap-2">
+      🤖 ML Visualizer
+    </h1>
 
-        <!-- Supervised Learning -->
-        <div class="mb-4">
-            <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Supervised Learning</h2>
-            <div class="space-y-1">
-                <button onclick="showTab('linear')" id="btn-linear" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition active-tab">1. Linear Regression</button>
-                <button onclick="showTab('logistic')" id="btn-logistic" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">2. Logistic Regression</button>
-                <button onclick="showTab('knn')" id="btn-knn" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">3. k-NN</button>
-                <button onclick="showTab('dt')" id="btn-dt" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">4. Decision Tree</button>
-                <button onclick="showTab('rf')" id="btn-rf" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">5. Random Forest</button>
-                <button onclick="showTab('svm')" id="btn-svm" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">6. SVM</button>
-                <button onclick="showTab('kmeans')" id="btn-kmeans" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">7. K-Means</button>
-                <button onclick="showTab('mlp')" id="btn-mlp" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">8. MLP (Neural Network)</button>
-                <button onclick="showTab('xgboost')" id="btn-xgboost" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">13. XGBoost</button>
-                <button onclick="showTab('stacking')" id="btn-stacking" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">14. Stacking</button>
-            </div>
+    <!-- Supervised Learning -->
+    <div class="mb-4">
+      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Supervised Learning</h2>
+      <div class="space-y-1">
+        <button onclick="showTab('linear')" id="btn-linear" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition active-tab">1. Linear Regression</button>
+        <button onclick="showTab('logistic')" id="btn-logistic" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">2. Logistic Regression</button>
+        <button onclick="showTab('knn')" id="btn-knn" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">3. k-NN</button>
+        <button onclick="showTab('dt')" id="btn-dt" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">4. Decision Tree</button>
+        <button onclick="showTab('rf')" id="btn-rf" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">5. Random Forest</button>
+        <button onclick="showTab('svm')" id="btn-svm" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">6. SVM</button>
+      </div>
+    </div>
+
+    <!-- Unsupervised Learning -->
+    <div class="mb-4">
+      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Unsupervised Learning</h2>
+      <div class="space-y-1">
+        <button onclick="showTab('kmeans')" id="btn-kmeans" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">1. K-Means Clustering</button>
+        <button onclick="showTab('pca')" id="btn-pca" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">2. PCA</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 p-6 overflow-y-auto">
+    <div class="max-w-4xl mx-auto">
+      <header class="mb-6">
+        <h2 id="algo-title" class="text-2xl font-bold text-white">Linear Regression</h2>
+        <p id="algo-desc" class="text-slate-400 text-sm mt-1">โมเดลสำหรับการพยากรณ์ค่าเชิงตัวเลขแบบต่อเนื่อง (Continuous Value)</p>
+      </header>
+
+      <!-- Visualization Canvas -->
+      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-6">
+        <canvas id="mlChart" class="w-full max-h-[400px]"></canvas>
+      </div>
+
+      <!-- Controls & Parameters -->
+      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+        <h3 class="font-semibold text-lg mb-3">ปรับแต่งพารามิเตอร์ (Parameters)</h3>
+        <div class="flex items-center gap-4">
+          <button onclick="updateChartData()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+            🔄 สุ่มข้อมูลใหม่ (Re-generate Data)
+          </button>
         </div>
+      </div>
+    </div>
+  </main>
 
-        <!-- Deep Learning / Unsupervised -->
-        <div class="mb-4">
-            <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Deep Learning & Unsupervised</h2>
-            <div class="space-y-1">
-                <button onclick="showTab('cnn')" id="btn-cnn" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">9. CNN</button>
-                <button onclick="showTab('lstm')" id="btn-lstm" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">10. LSTM</button>
-                <button onclick="showTab('transformer')" id="btn-transformer" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">11. Transformer</button>
-            </div>
-        </div>
+  <script>
+    let currentChart = null;
+    let currentTab = 'linear';
 
-        <!-- Reinforcement Learning -->
-        <div class="mb-4">
-            <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Reinforcement Learning</h2>
-            <div class="space-y-1">
-                <button onclick="showTab('rl')" id="btn-rl" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">12. Reinforcement Learning</button>
-            </div>
-        </div>
-    </aside>
+    const algoInfo = {
+      linear: { title: "1. Linear Regression", desc: "ใช้สร้างเส้นตรงพยากรณ์ความสัมพันธ์ของข้อมูลเชิงเส้น" },
+      logistic: { title: "2. Logistic Regression", desc: "ใช้ในการจำแนกกลุ่ม (Classification) ด้วย Sigmoid Function" },
+      knn: { title: "3. K-Nearest Neighbors (k-NN)", desc: "จำแนกกลุ่มข้อมูลตามความใกล้ชิดกับเพื่อนบ้าน k ตัวที่ใกล้ที่สุด" },
+      dt: { title: "4. Decision Tree", desc: "โมเดลต้นไม้การตัดสินใจ แตกกิ่งตามเงื่อนไขเพื่อจำแนกข้อมูล" },
+      rf: { title: "5. Random Forest", desc: "รวม Decision Tree หลายๆ ต้นเพื่อเพิ่มความแม่นยำในการพยากรณ์" },
+      svm: { title: "6. Support Vector Machine (SVM)", desc: "หาเส้น/ระนาบ (Hyperplane) ที่แบ่งกลุ่มข้อมูลให้ออกจากกันได้ดีที่สุด" },
+      kmeans: { title: "1. K-Means Clustering", desc: "จัดกลุ่มข้อมูลที่ไม่ระบุคำตอบออกเป็น K กลุ่มตามระยะห่างจากจุดศูนย์กลาง" },
+      pca: { title: "2. Principal Component Analysis (PCA)", desc: "ลดจำนวนมิติของข้อมูล (Dimensionality Reduction) โดยยังคงรักษาข้อมูลสำคัญไว้" }
+    };
 
-    <!-- Main Content Area -->
-    <main class="flex-1 p-6 overflow-y-auto">
-        
-        <!-- 1. Linear Regression -->
-        <section id="tab-linear" class="tab-content space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">1. Linear Regression</h2>
-            <p class="text-slate-300">หาเส้นตรง (Best Fit Line) ที่แทนความสัมพันธ์ระหว่างตัวแปร X และ Y</p>
-            <div class="bg-slate-800 p-4 rounded-lg shadow-lg max-w-2xl">
-                <canvas id="chartLinear"></canvas>
-            </div>
-        </section>
+    function showTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+      document.getElementById(`btn-${tabId}`).classList.add('active-tab');
+      
+      document.getElementById('algo-title').innerText = algoInfo[tabId].title;
+      document.getElementById('algo-desc').innerText = algoInfo[tabId].desc;
+      
+      updateChartData();
+    }
 
-        <!-- 2. Logistic Regression -->
-        <section id="tab-logistic" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">2. Logistic Regression</h2>
-            <p class="text-slate-300">ใช้ Sigmoid Function ในการทำความสัมพันธ์ให้เป็นความน่าจะเป็น (0 ถึง 1) สำหรับจำแนกประเภท (Classification)</p>
-            <div class="bg-slate-800 p-4 rounded-lg shadow-lg max-w-2xl">
-                <canvas id="chartLogistic"></canvas>
-            </div>
-        </section>
+    function updateChartData() {
+      const ctx = document.getElementById('mlChart').getContext('2d');
+      if (currentChart) currentChart.destroy();
 
-        <!-- 3. kNN -->
-        <section id="tab-knn" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">3. k-Nearest Neighbors (kNN)</h2>
-            <p class="text-slate-300">ทำนายกลุ่มข้อมูลโดยดูจากเพื่อนบ้านที่อยู่ใกล้ที่สุดจำนวน K ตัว</p>
-            <div class="bg-slate-800 p-4 rounded-lg shadow-lg max-w-2xl">
-                <canvas id="chartKNN"></canvas>
-            </div>
-        </section>
+      let dataPoints = Array.from({length: 20}, () => ({
+        x: Math.floor(Math.random() * 100),
+        y: Math.floor(Math.random() * 100)
+      }));
 
-        <!-- 4. Decision Tree -->
-        <section id="tab-dt" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">4. Decision Tree</h2>
-            <p class="text-slate-300">แบ่งข้อมูลด้วยโครงสร้างแบบต้นไม้ (If-Else Rules)</p>
-            <div class="bg-slate-800 p-6 rounded-lg shadow-lg max-w-2xl text-center space-y-4">
-                <div class="p-3 bg-blue-600 rounded inline-block font-semibold">อายุ &gt; 30?</div>
-                <div class="flex justify-around items-center pt-4">
-                    <div class="space-y-2">
-                        <p class="text-red-400 text-sm">ไม่ใช่</p>
-                        <div class="p-3 bg-slate-700 rounded border border-slate-600">รายได้ &gt; 50k?</div>
-                    </div>
-                    <div class="space-y-2">
-                        <p class="text-green-400 text-sm">ใช่</p>
-                        <div class="p-3 bg-green-600 rounded">อนุมัติวงเงิน</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. Random Forest -->
-        <section id="tab-rf" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">5. Random Forest</h2>
-            <p class="text-slate-300">นำ Decision Tree หลายๆ ต้นมารวมพลังกัน (Ensemble - Bagging) แล้วใช้เสียงส่วนใหญ่ในการโหวตคำตอบ</p>
-            <div class="bg-slate-800 p-6 rounded-lg shadow-lg max-w-2xl flex justify-around items-center">
-                <div class="text-center bg-slate-700 p-3 rounded border border-slate-600">🌳 Tree 1<br><span class="text-green-400 text-sm">ทาย: Class A</span></div>
-                <div class="text-center bg-slate-700 p-3 rounded border border-slate-600">🌳 Tree 2<br><span class="text-green-400 text-sm">ทาย: Class A</span></div>
-                <div class="text-center bg-slate-700 p-3 rounded border border-slate-600">🌳 Tree 3<br><span class="text-red-400 text-sm">ทาย: Class B</span></div>
-            </div>
-        </section>
-
-        <!-- 6. SVM -->
-        <section id="tab-svm" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">6. Support Vector Machine (SVM)</h2>
-            <p class="text-slate-300">สร้างเส้น/ระนาบ (Hyperplane) ที่สร้างระยะห่าง (Margin) ระหว่างข้อมูล 2 กลุ่มให้กว้างที่สุด</p>
-            <div class="bg-slate-800 p-4 rounded-lg shadow-lg max-w-2xl">
-                <canvas id="chartSVM"></canvas>
-            </div>
-        </section>
-
-        <!-- 7. K-Means -->
-        <section id="tab-kmeans" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">7. K-Means Clustering</h2>
-            <p class="text-slate-300">จัดกลุ่มข้อมูลที่ไม่มี Label โดยการหาจุดศูนย์กลาง (Centroid) และดึงจุดที่อยู่ใกล้เข้ากลุ่ม</p>
-            <div class="bg-slate-800 p-4 rounded-lg shadow-lg max-w-2xl">
-                <canvas id="chartKMeans"></canvas>
-            </div>
-        </section>
-
-        <!-- 8. MLP -->
-        <section id="tab-mlp" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">8. MLP (Multi-Layer Perceptron)</h2>
-            <p class="text-slate-300">โครงข่ายประสาทเทียมพื้นฐาน ประกอบด้วย Input, Hidden, และ Output Layer</p>
-            <div class="bg-slate-800 p-6 rounded-lg shadow-lg max-w-2xl flex justify-between items-center">
-                <div class="space-y-4 text-center">
-                    <p class="text-xs text-slate-400">Input Layer</p>
-                    <div class="w-8 h-8 bg-blue-500 rounded-full mx-auto"></div>
-                    <div class="w-8 h-8 bg-blue-500 rounded-full mx-auto"></div>
-                </div>
-                <div class="space-y-4 text-center">
-                    <p class="text-xs text-slate-400">Hidden Layer</p>
-                    <div class="w-8 h-8 bg-purple-500 rounded-full mx-auto"></div>
-                    <div class="w-8 h-8 bg-purple-500 rounded-full mx-auto"></div>
-                    <div class="w-8 h-8 bg-purple-500 rounded-full mx-auto"></div>
-                </div>
-                <div class="space-y-4 text-center">
-                    <p class="text-xs text-slate-400">Output Layer</p>
-                    <div class="w-8 h-8 bg-green-500 rounded-full mx-auto"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 9. CNN -->
-        <section id="tab-cnn" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">9. Convolutional Neural Network (CNN)</h2>
-            <p class="text-slate-300">ใช้สำหรับประมวลผลภาพ โดยใช้ Filter สกัดคุณลักษณะ (Feature Maps) ก่อนเข้าสู่ Dense Layer</p>
-            <div class="bg-slate-800 p-6 rounded-lg shadow-lg max-w-2xl flex items-center justify-around">
-                <div class="p-3 bg-slate-700 rounded border border-slate-600">🖼️ Input Image</div>
-                <div class="text-blue-400 font-bold">➔ [Convolution + Pooling] ➔</div>
-                <div class="p-3 bg-purple-700 rounded">📊 Feature Extraction</div>
-            </div>
-        </section>
-
-        <!-- 10. LSTM -->
-        <section id="tab-lstm" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">10. Long Short-Term Memory (LSTM)</h2>
-            <p class="text-slate-300">โครงข่ายประสาทสำหรับข้อมูลลำดับเวลา (Time-series / Sequence) ที่มี Forget Gate ช่วยจำข้อมูลระยะยาว</p>
-            <div class="bg-slate-800 p-6 rounded-lg shadow-lg max-w-2xl text-center">
-                <div class="inline-block p-4 bg-slate-700 rounded-lg border border-slate-600">
-                    <p class="font-semibold text-yellow-400">LSTM Cell</p>
-                    <p class="text-xs text-slate-300 mt-2">[Forget Gate] ➔ [Input Gate] ➔ [Output Gate]</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 11. Transformer -->
-        <section id="tab-transformer" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">11. Transformer</h2>
-            <p class="text-slate-300">สถาปัตยกรรมหลักของ LLM ยุคปัจจุบัน ใช้กลไก Self-Attention ในการประมวลผลข้อมูลทั้งข้อความพร้อมกัน</p>
-            <div class="bg-slate-800 p-6 rounded-lg shadow-lg max-w-2xl text-center space-y-3">
-                <div class="p-3 bg-indigo-600 rounded font-semibold">Self-Attention Mechanism</div>
-                <p class="text-sm text-slate-400">ประมวลผลความสัมพันธ์ของทุกคำในคำสั่งซื้อ/ข้อความพร้อมกันโดยไม่ต้องรอตามลำดับ</p>
-            </div>
-        </section>
-
-        <!-- 12. Reinforcement Learning -->
-        <section id="tab-rl" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">12. Reinforcement Learning</h2>
-            <p class="text-slate-300">การเรียนรู้ผ่านการลองผิดลองถูก Agent กระทำกิจกรรมกับ Environment เพื่อรับ Reward สูงสุด</p>
-            <div class="bg-slate-800 p-6 rounded-lg shadow-lg max-w-2xl flex justify-around items-center">
-                <div class="p-4 bg-blue-600 rounded-lg text-center">🤖 Agent</div>
-                <div class="text-center space-y-2">
-                    <p class="text-xs text-green-400">Action ➔</p>
-                    <p class="text-xs text-yellow-400">🔒 State / Reward 🔒</p>
-                </div>
-                <div class="p-4 bg-emerald-600 rounded-lg text-center">🌍 Environment</div>
-            </div>
-        </section>
-
-        <!-- 13. XGBoost -->
-        <section id="tab-xgboost" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">13. XGBoost</h2>
-            <p class="text-slate-300">Gradient Boosting Framework ประสิทธิภาพสูง สร้าง Decision Tree ต่อเนื่องกันเพื่อแก้ข้อผิดพลาดของต้นก่อนหน้า</p>
-            <div class="bg-slate-800 p-6 rounded-lg shadow-lg max-w-2xl flex justify-around items-center">
-                <div class="p-3 bg-slate-700 rounded">Tree 1 (Error: 0.4)</div>
-                <div class="text-blue-400">➔</div>
-                <div class="p-3 bg-slate-700 rounded">Tree 2 (Error: 0.1)</div>
-                <div class="text-blue-400">➔</div>
-                <div class="p-3 bg-green-700 rounded">Final Prediction</div>
-            </div>
-        </section>
-
-        <!-- 14. Stacking -->
-        <section id="tab-stacking" class="tab-content hidden space-y-4">
-            <h2 class="text-2xl font-bold text-blue-400">14. Stacking</h2>
-            <p class="text-slate-300">การนำผลการทำนายจากหลายๆ โมเดลต่างชนิดกัน (Base Models) ส่งต่อให้ Meta-Model ทำนายคำตอบสุดท้าย</p>
-            <div class="bg-slate-800 p-6 rounded-lg shadow-lg max-w-2xl text-center space-y-4">
-                <div class="flex justify-around">
-                    <span class="p-2 bg-slate-700 rounded text-xs">Model A (kNN)</span>
-                    <span class="p-2 bg-slate-700 rounded text-xs">Model B (SVM)</span>
-                    <span class="p-2 bg-slate-700 rounded text-xs">Model C (RF)</span>
-                </div>
-                <div class="text-blue-400">👇 ส่งคำตอบเข้า Meta-Learner</div>
-                <div class="p-3 bg-purple-600 rounded inline-block">Meta-Model (Logistic Regression)</div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- JavaScript Logic & Chart Visualizations -->
-    <script>
-        // Tab switching logic
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active-tab'));
-            
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`btn-${tabName}`).classList.add('active-tab');
+      currentChart = new Chart(ctx, {
+        type: (currentTab === 'linear' || currentTab === 'pca') ? 'line' : 'scatter',
+        data: {
+          datasets: [{
+            label: algoInfo[currentTab].title,
+            data: dataPoints,
+            backgroundColor: '#3b82f6',
+            borderColor: '#60a5fa',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+            y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+          },
+          plugins: {
+            legend: { labels: { color: '#f8fafc' } }
+          }
         }
+      });
+    }
 
-        // Initialize Chart.js Examples
-        window.onload = function() {
-            // 1. Linear Regression Chart
-            new Chart(document.getElementById('chartLinear'), {
-                type: 'scatter',
-                data: {
-                    datasets: [
-                        { label: 'Data Points', data: [{x: 1, y: 2}, {x: 2, y: 3.8}, {x: 3, y: 5.2}, {x: 4, y: 7.1}], backgroundColor: '#3b82f6' },
-                        { label: 'Best Fit Line', data: [{x: 1, y: 2}, {x: 4, y: 7}], type: 'line', borderColor: '#ef4444', fill: false }
-                    ]
-                },
-                options: { plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' } }, y: { ticks: { color: 'white' } } } }
-            });
-
-            // 2. Logistic Regression Chart
-            const sigmoidData = [];
-            for (let x = -6; x <= 6; x += 0.5) {
-                sigmoidData.push({x: x, y: 1 / (1 + Math.exp(-x))});
-            }
-            new Chart(document.getElementById('chartLogistic'), {
-                type: 'line',
-                data: {
-                    datasets: [{ label: 'Sigmoid Curve', data: sigmoidData, borderColor: '#10b981', fill: false }]
-                },
-                options: { plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' } }, y: { ticks: { color: 'white' } } } }
-            });
-
-            // 3. kNN Chart
-            new Chart(document.getElementById('chartKNN'), {
-                type: 'scatter',
-                data: {
-                    datasets: [
-                        { label: 'Class A', data: [{x: 2, y: 3}, {x: 3, y: 3}], backgroundColor: '#ef4444' },
-                        { label: 'Class B', data: [{x: 6, y: 5}, {x: 7, y: 6}], backgroundColor: '#3b82f6' },
-                        { label: 'New Point (Unknown)', data: [{x: 3.5, y: 3.5}], backgroundColor: '#f59e0b', pointRadius: 8 }
-                    ]
-                },
-                options: { plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' } }, y: { ticks: { color: 'white' } } } }
-            });
-
-            // 6. SVM Chart
-            new Chart(document.getElementById('chartSVM'), {
-                type: 'scatter',
-                data: {
-                    datasets: [
-                        { label: 'Group A', data: [{x: 1, y: 5}, {x: 2, y: 6}], backgroundColor: '#ef4444' },
-                        { label: 'Group B', data: [{x: 5, y: 1}, {x: 6, y: 2}], backgroundColor: '#3b82f6' },
-                        { label: 'Hyperplane', data: [{x: 0, y: 6}, {x: 6, y: 0}], type: 'line', borderColor: '#eab308', fill: false }
-                    ]
-                },
-                options: { plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' } }, y: { ticks: { color: 'white' } } } }
-            });
-
-            // 7. K-Means Chart
-            new Chart(document.getElementById('chartKMeans'), {
-                type: 'scatter',
-                data: {
-                    datasets: [
-                        { label: 'Cluster 1', data: [{x: 1, y: 1}, {x: 1.5, y: 2}, {x: 2, y: 1}], backgroundColor: '#ec4899' },
-                        { label: 'Cluster 2', data: [{x: 8, y: 8}, {x: 9, y: 7}, {x: 8.5, y: 9}], backgroundColor: '#06b6d4' },
-                        { label: 'Centroids', data: [{x: 1.5, y: 1.3}, {x: 8.5, y: 8}], backgroundColor: '#ffffff', pointRadius: 10, pointStyle: 'triangle' }
-                    ]
-                },
-                options: { plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' } }, y: { ticks: { color: 'white' } } } }
-            });
-        };
-    </script>
+    // Initialize chart on load
+    window.onload = () => showTab('linear');
+  </script>
 </body>
 </html>
