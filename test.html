@@ -18,30 +18,54 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col md:flex-row">
 
   <!-- Sidebar Navigation -->
-  <aside class="w-full md:w-72 bg-slate-800 border-r border-slate-700 p-4 overflow-y-auto">
+  <aside class="w-full md:w-80 bg-slate-800 border-r border-slate-700 p-4 overflow-y-auto max-h-screen">
     <h1 class="text-xl font-bold text-blue-400 mb-6 flex items-center gap-2">
       🤖 ML Visualizer
     </h1>
 
-    <!-- Supervised Learning -->
-    <div class="mb-4">
-      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Supervised Learning</h2>
+    <!-- 1. Supervised Learning -->
+    <div class="mb-5">
+      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">1. Supervised Learning</h2>
       <div class="space-y-1">
         <button onclick="showTab('linear')" id="btn-linear" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition active-tab">1. Linear Regression</button>
         <button onclick="showTab('logistic')" id="btn-logistic" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">2. Logistic Regression</button>
         <button onclick="showTab('knn')" id="btn-knn" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">3. k-NN</button>
         <button onclick="showTab('dt')" id="btn-dt" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">4. Decision Tree</button>
         <button onclick="showTab('rf')" id="btn-rf" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">5. Random Forest</button>
-        <button onclick="showTab('svm')" id="btn-svm" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">6. SVM</button>
+        <button onclick="showTab('svm')" id="btn-svm" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">6. Support Vector Machine (SVM)</button>
+        <button onclick="showTab('nb')" id="btn-nb" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">7. Naive Bayes</button>
+        <button onclick="showTab('xgboost')" id="btn-xgboost" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">8. Gradient Boosting / XGBoost</button>
       </div>
     </div>
 
-    <!-- Unsupervised Learning -->
-    <div class="mb-4">
-      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Unsupervised Learning</h2>
+    <!-- 2. Unsupervised Learning -->
+    <div class="mb-5">
+      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">2. Unsupervised Learning</h2>
       <div class="space-y-1">
         <button onclick="showTab('kmeans')" id="btn-kmeans" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">1. K-Means Clustering</button>
-        <button onclick="showTab('pca')" id="btn-pca" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">2. PCA</button>
+        <button onclick="showTab('hierarchical')" id="btn-hierarchical" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">2. Hierarchical Clustering</button>
+        <button onclick="showTab('dbscan')" id="btn-dbscan" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">3. DBSCAN</button>
+        <button onclick="showTab('pca')" id="btn-pca" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">4. PCA (Principal Component Analysis)</button>
+        <button onclick="showTab('tsne')" id="btn-tsne" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">5. t-SNE</button>
+      </div>
+    </div>
+
+    <!-- 3. Reinforcement Learning -->
+    <div class="mb-5">
+      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">3. Reinforcement Learning</h2>
+      <div class="space-y-1">
+        <button onclick="showTab('qlearning')" id="btn-qlearning" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">1. Q-Learning</button>
+        <button onclick="showTab('dqn')" id="btn-dqn" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">2. Deep Q-Network (DQN)</button>
+      </div>
+    </div>
+
+    <!-- 4. Deep Learning & Neural Networks -->
+    <div class="mb-5">
+      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">4. Neural Networks / Deep Learning</h2>
+      <div class="space-y-1">
+        <button onclick="showTab('ann')" id="btn-ann" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">1. Artificial Neural Network (ANN)</button>
+        <button onclick="showTab('cnn')" id="btn-cnn" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">2. Convolutional Neural Network (CNN)</button>
+        <button onclick="showTab('rnn')" id="btn-rnn" class="tab-btn w-full text-left px-3 py-2 rounded text-sm hover:bg-slate-700 transition">3. Recurrent Neural Network (RNN/LSTM)</button>
       </div>
     </div>
   </aside>
@@ -59,9 +83,9 @@
         <canvas id="mlChart" class="w-full max-h-[400px]"></canvas>
       </div>
 
-      <!-- Controls & Parameters -->
+      <!-- Controls & Details -->
       <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-        <h3 class="font-semibold text-lg mb-3">ปรับแต่งพารามิเตอร์ (Parameters)</h3>
+        <h3 class="font-semibold text-lg mb-3">การปรับแต่งพารามิเตอร์</h3>
         <div class="flex items-center gap-4">
           <button onclick="updateChartData()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
             🔄 สุ่มข้อมูลใหม่ (Re-generate Data)
@@ -73,50 +97,78 @@
 
   <script>
     let currentChart = null;
-    let currentTab = 'linear';
 
     const algoInfo = {
-      linear: { title: "1. Linear Regression", desc: "ใช้สร้างเส้นตรงพยากรณ์ความสัมพันธ์ของข้อมูลเชิงเส้น" },
-      logistic: { title: "2. Logistic Regression", desc: "ใช้ในการจำแนกกลุ่ม (Classification) ด้วย Sigmoid Function" },
-      knn: { title: "3. K-Nearest Neighbors (k-NN)", desc: "จำแนกกลุ่มข้อมูลตามความใกล้ชิดกับเพื่อนบ้าน k ตัวที่ใกล้ที่สุด" },
-      dt: { title: "4. Decision Tree", desc: "โมเดลต้นไม้การตัดสินใจ แตกกิ่งตามเงื่อนไขเพื่อจำแนกข้อมูล" },
-      rf: { title: "5. Random Forest", desc: "รวม Decision Tree หลายๆ ต้นเพื่อเพิ่มความแม่นยำในการพยากรณ์" },
-      svm: { title: "6. Support Vector Machine (SVM)", desc: "หาเส้น/ระนาบ (Hyperplane) ที่แบ่งกลุ่มข้อมูลให้ออกจากกันได้ดีที่สุด" },
-      kmeans: { title: "1. K-Means Clustering", desc: "จัดกลุ่มข้อมูลที่ไม่ระบุคำตอบออกเป็น K กลุ่มตามระยะห่างจากจุดศูนย์กลาง" },
-      pca: { title: "2. Principal Component Analysis (PCA)", desc: "ลดจำนวนมิติของข้อมูล (Dimensionality Reduction) โดยยังคงรักษาข้อมูลสำคัญไว้" }
+      // Supervised
+      linear: { title: "1. Linear Regression", desc: "สร้างเส้นตรงพยากรณ์ความสัมพันธ์เชิงเส้นระหว่างตัวแปร" },
+      logistic: { title: "2. Logistic Regression", desc: "คำนวณความน่าจะเป็นสำหรับแบ่งกลุ่มขอบเขต (Classification) ด้วย Sigmoid Function" },
+      knn: { title: "3. K-Nearest Neighbors (k-NN)", desc: "จำแนกกลุ่มข้อมูลตามความใกล้ชิดกับเพื่อนบ้าน k ตัวที่อยู่รอบข้าง" },
+      dt: { title: "4. Decision Tree", desc: "สร้างเงื่อนไขแผนต้นไม้เพื่อแบ่งกลุ่มข้อมูลออกเป็นโซนอย่างเป็นระเบียบ" },
+      rf: { title: "5. Random Forest", desc: "รวมการตัดสินใจจาก Decision Tree หลายๆ ต้นเพื่อเพิ่มความแม่นยำ" },
+      svm: { title: "6. Support Vector Machine (SVM)", desc: "ค้นหาเส้น/ระนาบ (Hyperplane) ที่แบ่งกลุ่มข้อมูลให้ออกจากกันได้กว้างที่สุด" },
+      nb: { title: "7. Naive Bayes", desc: "การจำแนกประเภทตามหลักความน่าจะเป็นของเบย์ (Bayes' Theorem)" },
+      xgboost: { title: "8. Gradient Boosting / XGBoost", desc: "รวมโมเดลขนาดเล็กแบบต่อยอดความผิดพลาด (Sequential Boosting) เพื่อความแม่นยำสูง" },
+
+      // Unsupervised
+      kmeans: { title: "1. K-Means Clustering", desc: "จัดกลุ่มข้อมูลที่ไม่มีคำตอบออกเป็น K กลุ่มตามระยะห่างจากจุดศูนย์กลาง (Centroids)" },
+      hierarchical: { title: "2. Hierarchical Clustering", desc: "จัดกลุ่มข้อมูลโครงสร้างลำดับชั้นในรูปแบบแผนผังต้นไม้ (Dendrogram)" },
+      dbscan: { title: "3. DBSCAN", desc: "จัดกลุ่มข้อมูลตามความหนาแน่น สามารถตรวจจับ Outliers ได้ดี" },
+      pca: { title: "4. PCA (Principal Component Analysis)", desc: "ลดจำนวนมิติข้อมูลโดยรักษาสภาพความแปรผันหลักไว้" },
+      tsne: { title: "5. t-SNE", desc: "ลดมิติข้อมูลเพื่อเน้นการแสดงผลการกระจายตัวแบบ 2D/3D visual" },
+
+      // Reinforcement
+      qlearning: { title: "1. Q-Learning", desc: "การเรียนรู้ของ Agent ผ่านการลองผิดลองถูกเพื่อสะสมคะแนนรางวัล (Reward) สูงสุด" },
+      dqn: { title: "2. Deep Q-Network (DQN)", desc: "ผสาน Deep Neural Network เข้ากับ Q-Learning สำหรับงานสภาพแวดล้อมซับซ้อน" },
+
+      // Deep Learning
+      ann: { title: "1. Artificial Neural Network (ANN)", desc: "โครงข่ายประสาทเทียมพื้นฐาน ประกอบด้วย Input, Hidden และ Output Layers" },
+      cnn: { title: "2. Convolutional Neural Network (CNN)", desc: "โครงข่ายประสาทดักจับ Feature สำหรับงานตรวจจับรูปภาพและวิดีโอ" },
+      rnn: { title: "3. Recurrent Neural Network (RNN/LSTM)", desc: "โครงข่ายประสาทที่มีความจำ เหมาะสำหรับข้อมูลอนุกรมเวลา (Time Series) และภาษา" }
     };
 
     function showTab(tabId) {
-      currentTab = tabId;
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
-      document.getElementById(`btn-${tabId}`).classList.add('active-tab');
+      const activeBtn = document.getElementById(`btn-${tabId}`);
+      if (activeBtn) activeBtn.classList.add('active-tab');
       
       document.getElementById('algo-title').innerText = algoInfo[tabId].title;
       document.getElementById('algo-desc').innerText = algoInfo[tabId].desc;
       
-      updateChartData();
+      updateChartData(tabId);
     }
 
-    function updateChartData() {
+    function updateChartData(tabId = 'linear') {
       const ctx = document.getElementById('mlChart').getContext('2d');
       if (currentChart) currentChart.destroy();
 
-      let dataPoints = Array.from({length: 20}, () => ({
-        x: Math.floor(Math.random() * 100),
-        y: Math.floor(Math.random() * 100)
-      }));
+      let chartType = 'scatter';
+      let datasets = [];
+
+      // ปรับรูปแบบกราฟจำลองตามแต่ละอัลกอริทึม
+      if (tabId === 'linear' || tabId === 'pca' || tabId === 'rnn') {
+        chartType = 'line';
+        datasets = [{
+          label: algoInfo[tabId].title,
+          data: Array.from({length: 15}, (_, i) => ({ x: i * 5, y: i * 6 + Math.random() * 15 })),
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.2)',
+          fill: true
+        }];
+      } else if (tabId === 'kmeans' || tabId === 'dbscan') {
+        datasets = [
+          { label: 'Cluster 1', data: Array.from({length: 10}, () => ({ x: Math.random() * 40, y: Math.random() * 40 })), backgroundColor: '#ef4444' },
+          { label: 'Cluster 2', data: Array.from({length: 10}, () => ({ x: 50 + Math.random() * 40, y: 50 + Math.random() * 40 })), backgroundColor: '#10b981' }
+        ];
+      } else {
+        datasets = [
+          { label: 'Class A', data: Array.from({length: 12}, () => ({ x: Math.random() * 50, y: Math.random() * 100 })), backgroundColor: '#3b82f6' },
+          { label: 'Class B', data: Array.from({length: 12}, () => ({ x: 40 + Math.random() * 50, y: Math.random() * 100 })), backgroundColor: '#f59e0b' }
+        ];
+      }
 
       currentChart = new Chart(ctx, {
-        type: (currentTab === 'linear' || currentTab === 'pca') ? 'line' : 'scatter',
-        data: {
-          datasets: [{
-            label: algoInfo[currentTab].title,
-            data: dataPoints,
-            backgroundColor: '#3b82f6',
-            borderColor: '#60a5fa',
-            borderWidth: 2
-          }]
-        },
+        type: chartType,
+        data: { datasets },
         options: {
           responsive: true,
           scales: {
@@ -130,7 +182,7 @@
       });
     }
 
-    // Initialize chart on load
+    // Initialize default tab on load
     window.onload = () => showTab('linear');
   </script>
 </body>
